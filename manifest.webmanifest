@@ -1,0 +1,16 @@
+{
+  "name": "Saif Modan Portfolio",
+  "short_name": "Saif Modan",
+  "description": "AI Developer portfolio of Saif Modan — Python, Generative AI, Data Analytics & Full-Stack Development",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

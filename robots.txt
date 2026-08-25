@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://saif-portfolio-seven-sigma.vercel.app/sitemap.xml
