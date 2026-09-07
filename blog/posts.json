@@ -1,5 +1,20 @@
 [
   {
+    "slug": "architecting-resilient-event-driven-data-pipelines-async-python-kafka",
+    "title": "Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka",
+    "metaDescription": "Explore building robust, scalable event-driven data pipelines using Async Python and Apache Kafka. Learn architectural patterns, performance tips, and resilience strategies.",
+    "tags": [
+      "Python",
+      "Apache Kafka",
+      "AsyncIO",
+      "Data Engineering",
+      "Event-Driven Architecture"
+    ],
+    "date": "2026-09-07",
+    "readingTime": "7 min read",
+    "image": "assets/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.jpg"
+  },
+  {
     "slug": "scaling-real-time-ml-inference-ray-fastapi-caching",
     "title": "Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching",
     "metaDescription": "Learn to build high-performance, scalable real-time ML inference services using Ray for distributed computing, FastAPI for APIs, and Redis for caching. Practical guide for AI engineers.",

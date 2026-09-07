@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka | Saif Modan</title>
+  <meta name="description" content="Explore building robust, scalable event-driven data pipelines using Async Python and Apache Kafka. Learn architectural patterns, performance tips, and resilience strategies.">
+  <meta name="keywords" content="Python, Apache Kafka, AsyncIO, Data Engineering, Event-Driven Architecture, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka | Saif Modan">
+  <meta property="og:description" content="Explore building robust, scalable event-driven data pipelines using Async Python and Apache Kafka. Learn architectural patterns, performance tips, and resilience strategies.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka">
+  <meta property="article:published_time" content="2026-09-07">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka | Saif Modan">
+  <meta name="twitter:description" content="Explore building robust, scalable event-driven data pipelines using Async Python and Apache Kafka. Learn architectural patterns, performance tips, and resilience strategies.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.jpg">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka",
+  "description": "Explore building robust, scalable event-driven data pipelines using Async Python and Apache Kafka. Learn architectural patterns, performance tips, and resilience strategies.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.jpg"
+  ],
+  "datePublished": "2026-09-07",
+  "dateModified": "2026-09-07",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.html"
+  },
+  "keywords": "Python, Apache Kafka, AsyncIO, Data Engineering, Event-Driven Architecture"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">Apache Kafka</span><span class="blog-tag-pill">AsyncIO</span><span class="blog-tag-pill">Data Engineering</span><span class="blog-tag-pill">Event-Driven Architecture</span>
+          </div>
+          <h1 class="blog-article-title">Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-07</span>
+              <span>•</span>
+              <span>7 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.jpg" alt="Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <p>The modern data landscape is a torrent, not a trickle. Businesses today generate and consume data at unprecedented speeds, demanding real-time insights, immediate reactions, and highly scalable processing capabilities. Traditional batch processing, while still valuable for certain workloads, often falls short when faced with the velocity and volume of streaming data from IoT devices, user interactions, financial transactions, or operational logs. This is where event-driven architectures shine, offering a paradigm shift towards reactive, decoupled, and highly resilient data flows.</p>
+<p>As an AI Developer and Data Analytics specialist, I've seen firsthand the challenges of building systems that can reliably ingest, transform, and deliver data at scale without sacrificing performance or fault tolerance. In this post, we'll dive deep into architecting robust event-driven data pipelines using the power of Async Python alongside Apache Kafka, a combination that offers unparalleled efficiency for I/O-bound operations and a rock-solid foundation for distributed data streaming.</p>
+<h2>The Imperative for Event-Driven Architectures</h2>
+<p>Imagine a scenario where thousands of sensors continuously report data, or millions of users interact with an application every second. Processing this data effectively requires a system that can:</p>
+<ol>
+<li><strong>Decouple Components</strong>: Producers of data shouldn't need to know about consumers, and vice-versa. This promotes independent development, deployment, and scaling.</li>
+<li><strong>Scale Elastically</strong>: The system must adapt to fluctuating data loads, scaling up or down components independently without service interruptions.</li>
+<li><strong>Ensure Fault Tolerance</strong>: Failures in one part of the pipeline should not bring down the entire system. Messages must not be lost.</li>
+<li><strong>Provide Real-time Processing</strong>: Latency must be minimal for critical use cases like fraud detection, personalized recommendations, or operational monitoring.</li>
+</ol>
+<p>Event-driven architectures, centered around message brokers, inherently provide these benefits. Each significant action or change of state within a system is treated as an 'event' and published to a central log. Consumers then subscribe to these events, processing them asynchronously.</p>
+<h2>Why Async Python and Apache Kafka?</h2>
+<p><strong>Apache Kafka</strong> stands as the de-facto standard for building high-throughput, fault-tolerant, and scalable real-time data feeds. Its core strengths lie in:</p>
+<ul>
+<li><strong>Durability</strong>: Events are persisted to disk and replicated across multiple brokers.</li>
+<li><strong>High Throughput</strong>: Capable of handling millions of messages per second.</li>
+<li><strong>Scalability</strong>: Distributed architecture allows for horizontal scaling by adding more brokers and partitions.</li>
+<li><strong>Fault Tolerance</strong>: Replicated partitions ensure data availability even if a broker fails.</li>
+<li><strong>Decoupling</strong>: Acts as a buffer between producers and consumers.</li>
+</ul>
+<p><strong>Async Python (<code>asyncio</code>)</strong> complements Kafka beautifully, particularly for I/O-bound tasks typical in data pipelines (network requests, database operations, Kafka interactions). Traditional multi-threading in Python is hampered by the Global Interpreter Lock (GIL), limiting true parallel execution of CPU-bound tasks. However, for I/O-bound tasks, <code>asyncio</code> enables highly efficient concurrent operations using a single thread, avoiding the overhead of context switching inherent in multi-threading. This means our Python producers and consumers can handle many concurrent Kafka messages or network calls without blocking, leading to significantly better resource utilization and throughput.</p>
+<h2>Architectural Blueprint: A Simple Event Pipeline</h2>
+<p>A typical event-driven pipeline with Kafka and Async Python involves:</p>
+<ul>
+<li><strong>Producers</strong>: Async Python applications that generate events and publish them to Kafka topics.</li>
+<li><strong>Kafka Cluster</strong>: The central nervous system, storing events in ordered, immutable logs (topics).</li>
+<li><strong>Consumers</strong>: Async Python applications that subscribe to topics, read events, process them, and commit their progress (offsets).</li>
+</ul>
+<pre><code class="language-mermaid">graph TD
+    A[Async Python Producer] --&gt; B(Kafka Topic: raw_data)
+    B --&gt; C[Async Python Consumer: Processor A]
+    B --&gt; D[Async Python Consumer: Processor B]
+    C --&gt; E(Kafka Topic: processed_data_A)
+    D --&gt; F(Kafka Topic: processed_data_B)
+    E --&gt; G[Downstream Service A]
+    F --&gt; H[Downstream Service B]
+</code></pre>
+<h2>Implementing with <code>aiokafka</code></h2>
+<p><code>aiokafka</code> is a Python client that provides <code>asyncio</code> compatibility for interacting with Kafka. Let's look at basic producer and consumer examples.</p>
+<h3>Async Producer Example</h3>
+<p>Our producer will send JSON events to a Kafka topic.</p>
+<pre><code class="language-python">import asyncio
+import json
+from aiokafka import AIOKafkaProducer
+
+async def produce_messages():
+    producer = AIOKafkaProducer(bootstrap_servers='localhost:9092')
+    await producer.start()
+    try:
+        for i in range(100):
+            message = {'id': i, 'value': f'event_{i}', 'timestamp': asyncio.get_event_loop().time()}
+            print(f&quot;Producing message: {message['id']}&quot;)
+            await producer.send_and_wait(
+                'raw_data_topic',
+                json.dumps(message).encode('utf-8')
+            )
+            await asyncio.sleep(0.1) # Simulate some work/delay
+    finally:
+        await producer.stop()
+
+if __name__ == '__main__':
+    asyncio.run(produce_messages())
+</code></pre>
+<p>This producer establishes an asynchronous connection, sends messages, and gracefully shuts down. <code>send_and_wait</code> ensures message delivery before proceeding, crucial for certain reliability guarantees.</p>
+<h3>Async Consumer Example</h3>
+<p>Our consumer will read from the <code>raw_data_topic</code>, process the messages, and print them.</p>
+<pre><code class="language-python">import asyncio
+import json
+from aiokafka import AIOKafkaConsumer
+
+async def consume_messages():
+    consumer = AIOKafkaConsumer(
+        'raw_data_topic',
+        bootstrap_servers='localhost:9092',
+        group_id='my_consumer_group',
+        auto_offset_reset='earliest' # Start consuming from the beginning if no offset is committed
+    )
+    await consumer.start()
+    try:
+        async for msg in consumer:
+            data = json.loads(msg.value.decode('utf-8'))
+            print(f&quot;Consumed message from topic {msg.topic}, partition {msg.partition}, offset {msg.offset}: {data}&quot;)
+            # Simulate processing work
+            await asyncio.sleep(0.05)
+            # Manually commit offset after successful processing (important for 'at-least-once' semantics)
+            await consumer.commit()
+    except asyncio.CancelledError:
+        print(&quot;Consumer task cancelled.&quot;)
+    finally:
+        await consumer.stop()
+
+if __name__ == '__main__':
+    asyncio.run(consume_messages())
+</code></pre>
+<p>This consumer joins a <code>consumer_group</code>, allowing Kafka to distribute partitions among consumers in that group. <code>auto_offset_reset='earliest'</code> ensures that if this is a new consumer group, it starts reading from the oldest available message. Manually committing offsets (<code>await consumer.commit()</code>) after processing is vital for resilience, ensuring that even if the consumer crashes, it restarts from the last successfully processed message, preventing data loss.</p>
+<h2>Performance and Scalability Considerations</h2>
+<p>To truly leverage this architecture for high throughput:</p>
+<ul>
+<li><strong>Batching Producer Messages</strong>: For higher throughput, producers can batch messages before sending. <code>aiokafka</code> handles this implicitly to some extent, but tuning <code>linger_ms</code> and <code>batch_size</code> can optimize performance.</li>
+<li><strong>Kafka Partitions</strong>: The number of partitions for a topic directly impacts consumer parallelism. Each partition can only be consumed by one consumer within a consumer group. More partitions allow for more concurrent consumers and higher throughput.</li>
+<li><strong>Consumer Concurrency</strong>: Within a single Async Python consumer process, you can spawn multiple <code>asyncio</code> tasks to process messages concurrently if the processing logic itself is I/O-bound. Be mindful of maintaining message order within a partition if that's a requirement.</li>
+<li><strong>Resource Management</strong>: Monitor CPU, memory, and network usage of your Python services and Kafka brokers. Over-provisioning or under-provisioning can lead to bottlenecks.</li>
+</ul>
+<h2>Ensuring Resilience and Fault Tolerance</h2>
+<p>Resilience is paramount in data pipelines. Here's how to enhance it:</p>
+<ul>
+<li><strong>Idempotent Producers</strong>: Kafka's idempotent producer feature (available in newer versions) ensures that messages are written to Kafka exactly once, even if the producer retries sending. Set <code>enable_idempotence=True</code> in <code>AIOKafkaProducer</code>.</li>
+<li><strong>At-Least-Once vs. Exactly-Once</strong>: Our current consumer implementation provides at-least-once semantics (messages might be processed more than once but never lost). Achieving exactly-once semantics often requires transactional processing, typically involving Kafka Streams or external transaction coordinators.</li>
+<li><strong>Robust Error Handling</strong>: Implement <code>try-except</code> blocks around message processing. If a message causes an error, log it, and potentially move it to a <strong>Dead Letter Queue (DLQ)</strong> topic for later inspection, rather than blocking the entire consumer.</li>
+<li><strong>Graceful Shutdown</strong>: Ensure your async applications handle <code>SIGTERM</code> signals to commit pending offsets and close connections cleanly, preventing data inconsistencies.</li>
+<li><strong>Consumer Group Rebalancing</strong>: Understand that when consumers join or leave a group, Kafka reassigns partitions. Your processing logic should be able to handle these rebalances gracefully.</li>
+</ul>
+<h2>Practical Tips and Best Practices</h2>
+<ol>
+<li><strong>Schema Enforcement</strong>: Use schema registries (like Confluent Schema Registry with Avro or Protobuf) to enforce data contracts between producers and consumers. This prevents deserialization errors and aids data governance.</li>
+<li><strong>Monitoring</strong>: Integrate with monitoring tools (Prometheus, Grafana) to track Kafka metrics (lag, throughput) and application metrics (processing time, error rates).</li>
+<li><strong>Containerization &amp; Orchestration</strong>: Deploy your Async Python services in Docker containers and orchestrate them with Kubernetes for easy scaling, deployment, and management.</li>
+<li><strong>Configuration Management</strong>: Externalize configurations for Kafka brokers, topics, and consumer/producer settings. Use environment variables or configuration files.</li>
+</ol>
+<h2>Conclusion</h2>
+<p>Building resilient, high-performance data pipelines is a cornerstone of modern AI and data analytics initiatives. By combining the distributed streaming capabilities of Apache Kafka with the efficient concurrency of Async Python, we can engineer systems that not only handle the scale and velocity of today's data but also provide the necessary fault tolerance and flexibility for future growth. The principles of event-driven architecture, coupled with careful implementation and thoughtful consideration of performance and resilience, empower us to unlock real-time insights and drive innovation across various domains. As an AI Developer, leveraging such robust data infrastructure is crucial for feeding the hungry beast of machine learning models with fresh, reliable data, enabling truly intelligent applications.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
