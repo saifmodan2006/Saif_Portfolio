@@ -1,5 +1,20 @@
 [
   {
+    "slug": "optimizing-high-throughput-vector-search-qdrant-polars",
+    "title": "Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI",
+    "metaDescription": "Learn how to build and optimize a high-throughput hybrid vector search pipeline using Qdrant, Polars, and FastAPI for real-time AI applications.",
+    "tags": [
+      "Python",
+      "Vector Search",
+      "Qdrant",
+      "Polars",
+      "FastAPI"
+    ],
+    "date": "2026-09-07",
+    "readingTime": "6 min read",
+    "image": "assets/blog/optimizing-high-throughput-vector-search-qdrant-polars.jpg"
+  },
+  {
     "slug": "architecting-resilient-event-driven-data-pipelines-async-python-kafka",
     "title": "Architecting Resilient Event-Driven Data Pipelines with Async Python and Apache Kafka",
     "metaDescription": "Explore building robust, scalable event-driven data pipelines using Async Python and Apache Kafka. Learn architectural patterns, performance tips, and resilience strategies.",

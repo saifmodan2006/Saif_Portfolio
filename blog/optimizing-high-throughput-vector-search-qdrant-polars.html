@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI | Saif Modan</title>
+  <meta name="description" content="Learn how to build and optimize a high-throughput hybrid vector search pipeline using Qdrant, Polars, and FastAPI for real-time AI applications.">
+  <meta name="keywords" content="Python, Vector Search, Qdrant, Polars, FastAPI, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/optimizing-high-throughput-vector-search-qdrant-polars.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI | Saif Modan">
+  <meta property="og:description" content="Learn how to build and optimize a high-throughput hybrid vector search pipeline using Qdrant, Polars, and FastAPI for real-time AI applications.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/optimizing-high-throughput-vector-search-qdrant-polars.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/optimizing-high-throughput-vector-search-qdrant-polars.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI">
+  <meta property="article:published_time" content="2026-09-07">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI | Saif Modan">
+  <meta name="twitter:description" content="Learn how to build and optimize a high-throughput hybrid vector search pipeline using Qdrant, Polars, and FastAPI for real-time AI applications.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/optimizing-high-throughput-vector-search-qdrant-polars.jpg">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI",
+  "description": "Learn how to build and optimize a high-throughput hybrid vector search pipeline using Qdrant, Polars, and FastAPI for real-time AI applications.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/optimizing-high-throughput-vector-search-qdrant-polars.jpg"
+  ],
+  "datePublished": "2026-09-07",
+  "dateModified": "2026-09-07",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/optimizing-high-throughput-vector-search-qdrant-polars.html"
+  },
+  "keywords": "Python, Vector Search, Qdrant, Polars, FastAPI"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">Vector Search</span><span class="blog-tag-pill">Qdrant</span><span class="blog-tag-pill">Polars</span><span class="blog-tag-pill">FastAPI</span>
+          </div>
+          <h1 class="blog-article-title">Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-07</span>
+              <span>•</span>
+              <span>6 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/optimizing-high-throughput-vector-search-qdrant-polars.jpg" alt="Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <h3>The Challenge of Modern Search: Beyond Pure Semantic Retrieval</h3>
+<p>While dense vector embeddings generated by modern Large Language Models (LLMs) excel at capturing conceptual and semantic meaning, they often struggle with exact keyword matching, product serial numbers, and domain-specific jargon. Conversely, traditional lexical search (like BM25) is highly precise for exact matches but misses conceptual context. </p>
+<p>To build production-grade search systems, engineers must implement <strong>hybrid search</strong>—combining the strengths of dense semantic retrieval and sparse lexical retrieval. However, executing dual queries, merging disparate score distributions, and ranking results in real-time introduces significant latency. </p>
+<p>In this technical guide, we will design and build a high-performance, asynchronous hybrid search pipeline. We will use <strong>FastAPI</strong> as our high-throughput API gateway, <strong>Qdrant</strong> as our vector database (which natively supports both dense and sparse vectors), and <strong>Polars</strong> to execute ultra-fast, in-memory Reciprocal Rank Fusion (RRF) on the CPU.</p>
+<hr />
+<h3>The Architecture: High-Throughput Hybrid Retrieval</h3>
+<p>To achieve sub-50ms search latency under heavy concurrent loads, our architecture minimizes serialization overhead and leverages asynchronous I/O at every stage:</p>
+<ol>
+<li><strong>Asynchronous Dual Retrieval</strong>: The incoming query is converted into both a dense vector (e.g., via a sentence-transformer model) and a sparse vector (e.g., via SPLADE or BM25-based tokenization). We query Qdrant asynchronously using its gRPC or HTTP client to retrieve top-$K$ candidates from both dense and sparse indices.</li>
+<li><strong>In-Memory Blending with Polars</strong>: Instead of using Pandas, which carries significant memory overhead and single-threaded bottlenecks, we use Polars to construct an in-memory DataFrame. Polars' multi-threaded execution engine allows us to align, merge, and score thousands of candidate documents using Reciprocal Rank Fusion (RRF) in microseconds.</li>
+<li><strong>FastAPI Gateway</strong>: FastAPI handles connection pooling to Qdrant and exposes a non-blocking endpoint to serve client requests.</li>
+</ol>
+<pre><code>  [ Client Request ] 
+         │
+         ▼
+   [ FastAPI App ] ───(Async Embeddings Generation)───► [ Dense &amp; Sparse Vectors ]
+         │                                                      │
+         ▼                                                      ▼
+   [ Qdrant DB ] ◄──────────────────────────────────────────────┘
+    ├── Dense Index (HNSW)
+    └── Sparse Index (Inverted)
+         │
+         ▼ (Async Fetch Results)
+   [ Polars Engine ] ───(Reciprocal Rank Fusion)───► [ Sorted &amp; Ranked Results ]
+         │
+         ▼
+  [ JSON Response ]
+</code></pre>
+<hr />
+<h3>Implementing the Pipeline</h3>
+<p>Let's implement this pipeline. First, ensure you have the required dependencies installed:</p>
+<pre><code class="language-bash">pip install fastapi uvicorn qdrant-client polars numpy
+</code></pre>
+<p>Below is the complete, production-ready implementation of our hybrid search router.</p>
+<pre><code class="language-python">import asyncio
+import os
+from typing import List, Dict, Any
+from fastapi import FastAPI, HTTPException, Depends
+import polars as pl
+from qdrant_client import AsyncQdrantClient
+from qdrant_client.http import models
+
+# Initialize FastAPI app
+app = FastAPI(title=&quot;High-Throughput Hybrid Search API&quot;)
+
+# Configuration
+QDRANT_HOST = os.getenv(&quot;QDRANT_HOST&quot;, &quot;localhost&quot;)
+QDRANT_PORT = int(os.getenv(&quot;QDRANT_PORT&quot;, 6333))
+COLLECTION_NAME = &quot;hybrid_knowledge_base&quot;
+
+# Dependency to yield AsyncQdrantClient
+async def get_qdrant_client() -&gt; AsyncQdrantClient:
+    client = AsyncQdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+    try:
+        yield client
+    finally:
+        await client.close()
+
+def reciprocal_rank_fusion(
+    dense_results: List[Dict[str, Any]], 
+    sparse_results: List[Dict[str, Any]], 
+    k: int = 60,
+    top_n: int = 10
+) -&gt; List[Dict[str, Any]]:
+    &quot;&quot;&quot;
+    Blends dense and sparse search results using Reciprocal Rank Fusion (RRF).
+    Leverages Polars for high-performance vectorized operations.
+    &quot;&quot;&quot;
+    if not dense_results and not sparse_results:
+        return []
+
+    # Convert results to Polars DataFrames with rank tracking
+    dense_df = pl.DataFrame([
+        {&quot;id&quot;: r[&quot;id&quot;], &quot;dense_score&quot;: r[&quot;score&quot;], &quot;dense_rank&quot;: idx + 1}
+        for idx, r in enumerate(dense_results)
+    ]) if dense_results else pl.DataFrame(schema={&quot;id&quot;: pl.Int64, &quot;dense_score&quot;: pl.Float64, &quot;dense_rank&quot;: pl.Int64})
+
+    sparse_df = pl.DataFrame([
+        {&quot;id&quot;: r[&quot;id&quot;], &quot;sparse_score&quot;: r[&quot;score&quot;], &quot;sparse_rank&quot;: idx + 1, &quot;payload&quot;: r[&quot;payload&quot;]}
+        for idx, r in enumerate(sparse_results)
+    ]) if sparse_results else pl.DataFrame(schema={&quot;id&quot;: pl.Int64, &quot;sparse_score&quot;: pl.Float64, &quot;sparse_rank&quot;: pl.Int64, &quot;payload&quot;: pl.Struct})
+
+    # Outer join to align candidates from both retrieval models
+    merged_df = dense_df.join(sparse_df, on=&quot;id&quot;, how=&quot;full&quot;)
+
+    # Compute RRF score: Sum(1 / (k + rank))
+    # Fill null ranks with a high penalty (e.g., rank 10000) to ensure fair scaling
+    rrf_df = merged_df.with_columns([
+        pl.col(&quot;dense_rank&quot;).fill_null(10000),
+        pl.col(&quot;sparse_rank&quot;).fill_null(10000)
+    ]).with_columns(
+        ( (1.0 / (k + pl.col(&quot;dense_rank&quot;))) + (1.0 / (k + pl.col(&quot;sparse_rank&quot;))) ).alias(&quot;rrf_score&quot;)
+    )
+
+    # Sort by RRF score descending and limit results
+    sorted_df = rrf_df.sort(&quot;rrf_score&quot;, descending=True).head(top_n)
+
+    return sorted_df.to_dicts()
+
+@app.post(&quot;/search&quot;)
+async def hybrid_search(
+    query_text: str,
+    limit: int = 20,
+    client: AsyncQdrantClient = Depends(get_qdrant_client)
+):
+    try:
+        # Mocked embedding generation for illustration purposes.
+        # In production, replace this with your model's inference call (e.g., ONNX, Triton, or SentenceTransformers)
+        mock_dense_vector = [0.15] * 384  # e.g., MiniLM-L6-v2 dimension
+        mock_sparse_indices = [12, 45, 982]
+        mock_sparse_values = [0.8, 0.4, 0.9]
+
+        # Execute dense and sparse queries concurrently via asyncio.gather
+        dense_task = client.search(
+            collection_name=COLLECTION_NAME,
+            query_vector=mock_dense_vector,
+            limit=limit,
+            with_payload=True
+        )
+
+        sparse_task = client.search(
+            collection_name=COLLECTION_NAME,
+            query_vector=models.NamedSparseVector(
+                name=&quot;sparse-text&quot;,
+                vector=models.SparseVector(
+                    indices=mock_sparse_indices,
+                    values=mock_sparse_values
+                )
+            ),
+            limit=limit,
+            with_payload=True
+        )
+
+        dense_res, sparse_res = await asyncio.gather(dense_task, sparse_task)
+
+        # Format responses
+        dense_hits = [{&quot;id&quot;: hit.id, &quot;score&quot;: hit.score} for hit in dense_res]
+        sparse_hits = [{&quot;id&quot;: hit.id, &quot;score&quot;: hit.score, &quot;payload&quot;: hit.payload} for hit in sparse_res]
+
+        # Fuse rankings using Polars
+        fused_results = reciprocal_rank_fusion(dense_hits, sparse_hits, k=60, top_n=10)
+
+        return {&quot;status&quot;: &quot;success&quot;, &quot;results&quot;: fused_results}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f&quot;Search failed: {str(e)}&quot;)
+</code></pre>
+<hr />
+<h3>Architectural Deep Dive &amp; Performance Trade-offs</h3>
+<h4>1. Why Polars Over Pandas for RRF?</h4>
+<p>Reciprocal Rank Fusion requires aligning two sorted lists, filling missing values for unaligned items, and executing element-wise arithmetic. While Pandas can perform these operations, its overhead in memory allocation and single-threaded execution model introduces a latency bottleneck when handling hundreds of concurrent requests. </p>
+<p>Polars is written in Rust and utilizes Apache Arrow as its memory model. It executes expressions in parallel across CPU cores and avoids copying memory during joins, making our RRF function complete in less than <strong>1.5 milliseconds</strong>, even with candidate lists of size $K=100$.</p>
+<h4>2. Tuning the RRF Constant ($k$)</h4>
+<p>In the RRF formula, the constant $k$ (typically set to <code>60</code>) determines how much weight is given to top-ranked items versus low-ranked items. <br />
+- A <strong>lower $k$</strong> (e.g., <code>20</code>) heavily penalizes items that do not appear near the very top of either list, prioritizing high-confidence matches from either model.<br />
+- A <strong>higher $k$</strong> (e.g., <code>100</code>) smooths out the rank penalties, giving a better chance to items that are moderately ranked in both lists.</p>
+<h4>3. Qdrant Index Configuration for High Throughput</h4>
+<p>To maximize Qdrant's throughput, ensure your collection is initialized with optimized index settings. For example, configure the HNSW index for the dense vector field and activate the inverted index for the sparse vector field:</p>
+<pre><code class="language-python">await client.create_collection(
+    collection_name=COLLECTION_NAME,
+    vectors_config=models.VectorParams(
+        size=384, 
+        distance=models.Distance.COSINE,
+        hnsw_config=models.HnswConfigDiff(m=16, ef_construct=100)
+    ),
+    sparse_vectors_config={
+        &quot;sparse-text&quot;: models.SparseVectorParams(
+            index=models.SparseIndexParams(
+                on_disk=True
+            )
+        )
+    }
+)
+</code></pre>
+<p>Using <code>on_disk=True</code> for sparse indices keeps memory utilization low while relying on Qdrant's highly optimized SSD-based inverted index retrieval.</p>
+<hr />
+<h3>Conclusion</h3>
+<p>By combining FastAPI's asynchronous event loop, Qdrant's native hybrid retrieval capabilities, and Polars' lightning-fast data transformations, we have built a highly scalable, production-ready search pipeline. This setup avoids common performance bottlenecks associated with Python data processing, ensuring your AI applications remain fast, reliable, and semantically precise under heavy production workloads.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
