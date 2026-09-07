@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching | Saif Modan</title>
+  <meta name="description" content="Learn to build high-performance, scalable real-time ML inference services using Ray for distributed computing, FastAPI for APIs, and Redis for caching. Practical guide for AI engineers.">
+  <meta name="keywords" content="Python, AI Engineering, Distributed Systems, MLOps, Performance Optimization, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-real-time-ml-inference-ray-fastapi-caching.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching | Saif Modan">
+  <meta property="og:description" content="Learn to build high-performance, scalable real-time ML inference services using Ray for distributed computing, FastAPI for APIs, and Redis for caching. Practical guide for AI engineers.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-real-time-ml-inference-ray-fastapi-caching.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-real-time-ml-inference-ray-fastapi-caching.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching">
+  <meta property="article:published_time" content="2026-09-07">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching | Saif Modan">
+  <meta name="twitter:description" content="Learn to build high-performance, scalable real-time ML inference services using Ray for distributed computing, FastAPI for APIs, and Redis for caching. Practical guide for AI engineers.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-real-time-ml-inference-ray-fastapi-caching.jpg">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching",
+  "description": "Learn to build high-performance, scalable real-time ML inference services using Ray for distributed computing, FastAPI for APIs, and Redis for caching. Practical guide for AI engineers.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-real-time-ml-inference-ray-fastapi-caching.jpg"
+  ],
+  "datePublished": "2026-09-07",
+  "dateModified": "2026-09-07",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-real-time-ml-inference-ray-fastapi-caching.html"
+  },
+  "keywords": "Python, AI Engineering, Distributed Systems, MLOps, Performance Optimization"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">AI Engineering</span><span class="blog-tag-pill">Distributed Systems</span><span class="blog-tag-pill">MLOps</span><span class="blog-tag-pill">Performance Optimization</span>
+          </div>
+          <h1 class="blog-article-title">Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-07</span>
+              <span>•</span>
+              <span>9 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/scaling-real-time-ml-inference-ray-fastapi-caching.jpg" alt="Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <p>As an AI Developer and Data Analytics specialist, I've seen firsthand the increasing demand for real-time machine learning inference. From recommendation engines and fraud detection to personalized content delivery and autonomous systems, the ability to serve predictions with low latency and high throughput is paramount. However, deploying ML models in production, especially at scale, presents a unique set of challenges. We often grapple with resource contention, varying load patterns, model cold starts, and the need for robust, fault-tolerant systems.</p>
+<p>This article delves into a pragmatic architecture for building high-performance, scalable real-time ML inference services. We'll combine the strengths of FastAPI for building blazing-fast APIs, Ray for distributed computation and model serving, and Redis for intelligent caching to significantly boost performance and efficiency.</p>
+<h2>The Challenge of Real-time ML Inference</h2>
+<p>Traditional approaches to model serving often struggle under heavy load. A single-threaded Flask or Django application might suffice for low-volume scenarios, but real-time demands expose several bottlenecks:</p>
+<ol>
+<li><strong>Latency</strong>: Users expect immediate responses. Even a few hundred milliseconds can degrade user experience or impact critical decisions.</li>
+<li><strong>Throughput</strong>: Handling thousands or millions of requests per second requires efficient resource utilization and parallelism.</li>
+<li><strong>Resource Contention</strong>: ML models, especially deep learning ones, are often computationally intensive, requiring GPUs or significant CPU resources. Loading models for every request is inefficient.</li>
+<li><strong>Scalability</strong>: The ability to scale horizontally (adding more instances) and vertically (more powerful instances) without significant architectural changes is crucial.</li>
+<li><strong>Cold Starts</strong>: When a model isn't actively being used, it might be unloaded from memory, leading to a delay when the next request arrives.</li>
+</ol>
+<p>Our proposed architecture addresses these challenges by distributing the workload and intelligently caching results.</p>
+<h2>Architectural Overview</h2>
+<p>At a high level, our system will look like this:</p>
+<ul>
+<li><strong>FastAPI</strong>: Serves as the asynchronous API gateway, handling incoming requests and orchestrating the inference process.</li>
+<li><strong>Ray</strong>: Provides the distributed computing backbone, managing a pool of model workers (Ray Actors) that load and serve ML models efficiently.</li>
+<li><strong>Redis</strong>: Acts as a distributed cache to store inference results, preventing redundant computations for frequently requested inputs.</li>
+</ul>
+<pre><code class="language-mermaid">graph TD
+    A[Client] --&gt; B(FastAPI Inference API)
+    B --&gt; C{Check Redis Cache}
+    C -- Cache Hit --&gt; D[Return Cached Result]
+    C -- Cache Miss --&gt; E(Ray Actor Pool)
+    E --&gt; F[ML Model Inference]
+    F --&gt; G[Prediction]
+    G --&gt; H(Store in Redis Cache)
+    H --&gt; D
+</code></pre>
+<h2>FastAPI: The Inference Gateway</h2>
+<p>FastAPI is an excellent choice for our API layer due to its high performance (powered by Starlette and Pydantic), asynchronous capabilities, and automatic data validation and documentation. It allows us to expose our inference endpoint with minimal overhead.</p>
+<p>Here's a basic FastAPI setup for an inference endpoint:</p>
+<pre><code class="language-python"># app.py
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+
+app = FastAPI(title=&quot;ML Inference Service&quot;)
+
+class InferenceRequest(BaseModel:
+    data: list[float]  # Example input data
+
+class InferenceResponse(BaseModel:
+    prediction: float
+
+@app.post(&quot;/predict&quot;, response_model=InferenceResponse)
+async def predict_item(request: InferenceRequest):
+    # In a real scenario, this would call our Ray actor
+    # For now, a placeholder
+    try:
+        # Simulate a complex inference
+        result = sum(request.data) / len(request.data)
+        return InferenceResponse(prediction=result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# To run: uvicorn app:app --host 0.0.0.0 --port 8000
+</code></pre>
+<h2>Ray: Distributed Computing for ML</h2>
+<p>Ray is an open-source framework that provides a simple, universal API for building and running distributed applications. It's particularly powerful for ML workloads because it allows us to easily create distributed actors, tasks, and data structures. For our inference service, Ray Actors are key.</p>
+<p><strong>Ray Actors</strong> are stateful, distributed objects. We can use them to load our ML model once per actor and then serve multiple inference requests concurrently or sequentially without reloading the model. This significantly reduces cold start times and resource overhead.</p>
+<p>First, initialize Ray:</p>
+<pre><code class="language-python">import ray
+
+if not ray.is_initialized():
+    ray.init(ignore_reinit_error=True, log_to_driver=False)
+</code></pre>
+<p>Now, let's define a Ray Actor for our model:</p>
+<pre><code class="language-python"># model_actor.py
+import ray
+import time
+# from your_ml_library import load_model, predict
+
+@ray.remote(num_cpus=1, num_gpus=0) # Adjust resources as needed
+class ModelActor:
+    def __init__(self, model_path: str = &quot;./my_model.pkl&quot;):
+        print(f&quot;Loading model from {model_path}...&quot;)
+        self.model = self._load_model(model_path) # Placeholder for actual model loading
+        print(&quot;Model loaded successfully.&quot;)
+
+    def _load_model(self, model_path):
+        # In a real application, load your TensorFlow, PyTorch, Scikit-learn model here
+        # For demonstration, we'll use a dummy object
+        time.sleep(2) # Simulate model loading time
+        return {&quot;name&quot;: &quot;DummyModel&quot;, &quot;version&quot;: &quot;1.0&quot;}
+
+    def predict(self, data: list[float]) -&gt; float:
+        # Simulate inference time
+        time.sleep(0.1)
+        # Placeholder for actual prediction logic
+        return sum(data) / len(data) * 1.05 # Slightly different result to show computation
+
+# Example usage (can be run in a separate script or directly in main)
+# actor_handle = ModelActor.remote()
+# future_result = actor_handle.predict.remote([1.0, 2.0, 3.0])
+# print(ray.get(future_result))
+</code></pre>
+<h2>Distributed Caching with Redis</h2>
+<p>Many real-time inference requests might involve identical or highly similar inputs. Re-computing predictions for these inputs is wasteful. A distributed cache like Redis can store inference results, allowing us to serve subsequent identical requests almost instantaneously.</p>
+<p>Key considerations for caching:</p>
+<ul>
+<li><strong>Cache Key Generation</strong>: A unique, consistent key for each request input. Hashing the input data (e.g., using MD5 or SHA256) is a common approach.</li>
+<li><strong>Time-to-Live (TTL)</strong>: Cached predictions might become stale if the underlying model changes or if the data distribution shifts. Implementing an appropriate TTL ensures data freshness.</li>
+<li><strong>Serialization</strong>: Storing and retrieving complex Python objects requires serialization (e.g., JSON, pickle).</li>
+</ul>
+<pre><code class="language-python"># redis_client.py
+import redis
+import json
+import hashlib
+
+class RedisCache:
+    def __init__(self, host='localhost', port=6379, db=0, ttl_seconds=300):
+        self.client = redis.StrictRedis(host=host, port=port, db=db, decode_responses=True)
+        self.ttl_seconds = ttl_seconds
+
+    def _generate_key(self, data: list[float]) -&gt; str:
+        # Convert list to a stable string representation for hashing
+        data_str = json.dumps(data, sort_keys=True)
+        return hashlib.md5(data_str.encode('utf-8')).hexdigest()
+
+    def get(self, data: list[float]):
+        key = self._generate_key(data)
+        cached_result = self.client.get(key)
+        if cached_result:
+            print(f&quot;Cache Hit for key: {key}&quot;)
+            return json.loads(cached_result)
+        print(f&quot;Cache Miss for key: {key}&quot;)
+        return None
+
+    def set(self, data: list[float], prediction: float):
+        key = self._generate_key(data)
+        self.client.setex(key, self.ttl_seconds, json.dumps(prediction))
+
+# Example usage:
+# cache = RedisCache()
+# cache.set([1,2,3], 2.5)
+# print(cache.get([1,2,3]))
+</code></pre>
+<h2>Putting It All Together: A Unified Architecture</h2>
+<p>Now, let's integrate these components into our FastAPI application.</p>
+<pre><code class="language-python"># main.py (combining FastAPI, Ray, and Redis)
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import ray
+import asyncio
+
+from model_actor import ModelActor # Assuming model_actor.py is in the same directory
+from redis_client import RedisCache # Assuming redis_client.py is in the same directory
+
+# --- Ray Initialization ---
+if not ray.is_initialized():
+    ray.init(ignore_reinit_error=True, log_to_driver=False)
+
+# Initialize Ray Actor once globally
+# We can scale this by creating multiple actors:
+# actor_handles = [ModelActor.remote() for _ in range(4)] # e.g., 4 model workers
+# For simplicity, let's use one for now
+model_actor = ModelActor.remote()
+
+# --- Redis Initialization ---
+redis_cache = RedisCache(host='localhost', port=6379, db=0, ttl_seconds=60)
+
+# --- FastAPI App ---
+app = FastAPI(title=&quot;Scalable ML Inference Service&quot;)
+
+class InferenceRequest(BaseModel:
+    data: list[float]
+
+class InferenceResponse(BaseModel:
+    prediction: float
+
+@app.post(&quot;/predict&quot;, response_model=InferenceResponse)
+async def predict_item(request: InferenceRequest):
+    try:
+        # 1. Check Cache
+        cached_prediction = redis_cache.get(request.data)
+        if cached_prediction is not None:
+            return InferenceResponse(prediction=cached_prediction)
+
+        # 2. If Cache Miss, call Ray Actor for inference
+        # Use await ray.get() for async FastAPI context
+        prediction_future = model_actor.predict.remote(request.data)
+        prediction = await prediction_future # Await the Ray future
+
+        # 3. Store result in Cache
+        redis_cache.set(request.data, prediction)
+
+        return InferenceResponse(prediction=prediction)
+    except Exception as e:
+        # Log the error for debugging
+        print(f&quot;Error during inference: {e}&quot;)
+        raise HTTPException(status_code=500, detail=&quot;Internal server error during prediction.&quot;)
+
+# To run this: ensure Ray is running (ray start --head), Redis is running, then:
+# uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+</code></pre>
+<p>With this setup, FastAPI handles the web requests, Redis serves immediate responses for cached inputs, and Ray efficiently manages the heavy lifting of model inference across potentially many distributed workers.</p>
+<h2>Performance Considerations &amp; Trade-offs</h2>
+<ol>
+<li><strong>Latency vs. Throughput</strong>: Caching dramatically reduces latency for cache hits, boosting overall throughput. However, cache misses still incur the full inference latency. Tuning <code>ttl_seconds</code> for Redis is crucial here.</li>
+<li><strong>Cache Hit Ratio</strong>: The effectiveness of caching depends entirely on how often requests are repeated. For highly dynamic inputs, caching might offer less benefit.</li>
+<li><strong>Ray Worker Scaling</strong>: The <code>num_cpus</code> and <code>num_gpus</code> parameters for <code>ModelActor.remote()</code> should be carefully chosen based on your model's resource requirements. You can launch multiple <code>ModelActor</code> instances to parallelize inference across different machines in a Ray cluster.</li>
+<li><strong>Serialization Overheads</strong>: Data needs to be serialized when passed between FastAPI and Ray, and when stored in Redis. For very large inputs or outputs, this can introduce overhead. Consider efficient serialization formats like MessagePack or Apache Arrow if JSON becomes a bottleneck.</li>
+<li><strong>Model Versioning</strong>: When you update your ML model, you'll need a strategy to gracefully update your <code>ModelActor</code> instances and potentially invalidate relevant cache entries. Ray's <code>ray.serve</code> is an excellent choice for more sophisticated model deployment and versioning.</li>
+<li><strong>Network Latency</strong>: Ensure your FastAPI server, Ray cluster, and Redis instance are co-located in the same data center or region to minimize network latency.</li>
+</ol>
+<h2>Practical Tips</h2>
+<ul>
+<li><strong>Monitoring</strong>: Implement comprehensive monitoring for FastAPI (request rates, error rates, latency), Ray (worker health, task queues), and Redis (cache hit/miss ratio, memory usage). Prometheus and Grafana are excellent tools for this.</li>
+<li><strong>Logging</strong>: Use structured logging (e.g., <code>loguru</code>, <code>structlog</code>) to gain insights into your application's behavior and quickly diagnose issues.</li>
+<li><strong>Containerization</strong>: Dockerize your FastAPI application, Ray workers, and Redis for consistent deployment across different environments (local, staging, production) and for easy orchestration with Kubernetes.</li>
+<li><strong>Load Testing</strong>: Before production deployment, thoroughly load test your service using tools like Locust or k6 to identify bottlenecks and validate scalability assumptions.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>Building high-performance, scalable real-time ML inference services is a complex endeavor, but by strategically combining powerful tools like FastAPI, Ray, and Redis, we can construct robust and efficient architectures. This approach allows us to serve predictions with low latency, handle high throughput, and make optimal use of computational resources. As the demand for immediate, intelligent insights continues to grow, mastering these distributed patterns will be a crucial skill for any AI engineer focused on bringing models from research to production reality.</p>
+<p>I encourage you to experiment with this architecture, adapt it to your specific model requirements, and explore the advanced features offered by each component to build truly resilient and performant AI systems. Happy inferring!</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>

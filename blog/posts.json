@@ -1,5 +1,20 @@
 [
   {
+    "slug": "scaling-real-time-ml-inference-ray-fastapi-caching",
+    "title": "Scaling Real-time ML Inference: Leveraging Ray, FastAPI, and Distributed Caching",
+    "metaDescription": "Learn to build high-performance, scalable real-time ML inference services using Ray for distributed computing, FastAPI for APIs, and Redis for caching. Practical guide for AI engineers.",
+    "tags": [
+      "Python",
+      "AI Engineering",
+      "Distributed Systems",
+      "MLOps",
+      "Performance Optimization"
+    ],
+    "date": "2026-09-07",
+    "readingTime": "9 min read",
+    "image": "assets/blog/scaling-real-time-ml-inference-ray-fastapi-caching.jpg"
+  },
+  {
     "slug": "high-performance-async-video-processing-fastapi-opencv",
     "title": "Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV",
     "metaDescription": "Learn to build scalable, real-time video processing microservices using FastAPI, OpenCV, and asynchronous Python for high-throughput AI inference.",
