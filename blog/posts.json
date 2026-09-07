@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "high-performance-async-video-processing-fastapi-opencv",
+    "title": "Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV",
+    "metaDescription": "Learn to build scalable, real-time video processing microservices using FastAPI, OpenCV, and asynchronous Python for high-throughput AI inference.",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "Computer Vision",
+      "AI Engineering",
+      "Asynchronous Programming"
+    ],
+    "date": "2026-09-07",
+    "readingTime": "7 min read",
+    "image": "assets/blog/high-performance-async-video-processing-fastapi-opencv.jpg"
+  }
+]

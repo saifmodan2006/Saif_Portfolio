@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV | Saif Modan</title>
+  <meta name="description" content="Learn to build scalable, real-time video processing microservices using FastAPI, OpenCV, and asynchronous Python for high-throughput AI inference.">
+  <meta name="keywords" content="Python, FastAPI, Computer Vision, AI Engineering, Asynchronous Programming, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/high-performance-async-video-processing-fastapi-opencv.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV | Saif Modan">
+  <meta property="og:description" content="Learn to build scalable, real-time video processing microservices using FastAPI, OpenCV, and asynchronous Python for high-throughput AI inference.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/high-performance-async-video-processing-fastapi-opencv.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-performance-async-video-processing-fastapi-opencv.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV">
+  <meta property="article:published_time" content="2026-09-07">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV | Saif Modan">
+  <meta name="twitter:description" content="Learn to build scalable, real-time video processing microservices using FastAPI, OpenCV, and asynchronous Python for high-throughput AI inference.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-performance-async-video-processing-fastapi-opencv.jpg">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV",
+  "description": "Learn to build scalable, real-time video processing microservices using FastAPI, OpenCV, and asynchronous Python for high-throughput AI inference.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-performance-async-video-processing-fastapi-opencv.jpg"
+  ],
+  "datePublished": "2026-09-07",
+  "dateModified": "2026-09-07",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/high-performance-async-video-processing-fastapi-opencv.html"
+  },
+  "keywords": "Python, FastAPI, Computer Vision, AI Engineering, Asynchronous Programming"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">FastAPI</span><span class="blog-tag-pill">Computer Vision</span><span class="blog-tag-pill">AI Engineering</span><span class="blog-tag-pill">Asynchronous Programming</span>
+          </div>
+          <h1 class="blog-article-title">Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-07</span>
+              <span>•</span>
+              <span>7 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/high-performance-async-video-processing-fastapi-opencv.jpg" alt="Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <h1>Building High-Performance Asynchronous Video Processing Microservices with FastAPI and OpenCV</h1>
+<p>In today's data-driven world, video content is ubiquitous, fueling applications from smart surveillance and autonomous vehicles to content moderation and interactive media. Processing this deluge of visual data in real-time or near real-time presents a significant engineering challenge. Traditional synchronous application architectures often falter under the heavy I/O and CPU demands of video analysis, leading to bottlenecks, slow response times, and poor user experiences.</p>
+<p>As an AI Developer and Python Engineer, I frequently encounter scenarios where robust, scalable video processing is paramount. This article delves into building high-performance asynchronous microservices using FastAPI, Python's modern web framework, combined with OpenCV, the de-facto standard for computer vision tasks. We'll explore how to leverage asynchronous programming paradigms to handle concurrent video streams efficiently, ensuring our AI models can process visual data at scale.</p>
+<h2>The Asynchronous Advantage for Video Workloads</h2>
+<p>Video processing is inherently a mix of I/O-bound operations (reading frames from a stream, saving results) and CPU-bound operations (applying filters, running AI inference models). In a synchronous server, a single long-running task, such as processing a large video frame or waiting for a disk operation, can block the entire server, preventing it from handling other incoming requests. This leads to poor concurrency and low throughput.</p>
+<p>FastAPI, built on Starlette and Pydantic, fully embraces Python's <code>async/await</code> syntax, allowing developers to write non-blocking code. When an <code>await</code> keyword is encountered, the control flow is temporarily yielded back to the event loop, enabling the server to process other requests while the awaited operation completes. This is crucial for I/O-bound tasks. For CPU-bound tasks, FastAPI intelligently delegates them to a separate thread pool, ensuring the main event loop remains unblocked. This hybrid approach is ideal for video processing.</p>
+<h2>Setting Up Your Development Environment</h2>
+<p>First, let's set up our project. You'll need Python 3.8+.</p>
+<pre><code class="language-bash">pip install fastapi uvicorn[standard] opencv-python
+</code></pre>
+<p><code>uvicorn</code> is our ASGI server that will run the FastAPI application, and <code>opencv-python</code> provides the necessary computer vision functionalities.</p>
+<h2>Designing the Microservice Architecture</h2>
+<p>Our microservice will expose endpoints for receiving video streams or files, processing them frame by frame, and returning results. For simplicity, we'll focus on a basic frame processing task, like converting frames to grayscale or applying a simple edge detection filter. In a real-world scenario, this could be replaced with a complex AI inference model.</p>
+<h3>Core FastAPI Application Structure</h3>
+<p>Let's start with a basic FastAPI application and an endpoint to handle video uploads.</p>
+<pre><code class="language-python"># main.py
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import StreamingResponse
+import cv2
+import numpy as np
+import io
+from concurrent.futures import ThreadPoolExecutor
+
+app = FastAPI()
+executor = ThreadPoolExecutor()
+
+async def process_frame_async(frame_bytes: bytes):
+    # This function will run in a separate thread
+    nparr = np.frombuffer(frame_bytes, np.uint8)
+    frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    if frame is None:
+        return None # Handle potential decoding errors
+
+    # Example: Convert to grayscale and then Canny edge detection
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray_frame, 100, 200)
+
+    # Encode the processed frame back to JPEG bytes
+    _, buffer = cv2.imencode('.jpg', edges)
+    return buffer.tobytes()
+
+
+@app.post(&quot;/process-video/&quot;)
+async def process_video(video_file: UploadFile = File(...)):
+    if not video_file.content_type.startswith('video/'):
+        raise HTTPException(status_code=400, detail=&quot;Invalid file type. Please upload a video.&quot;)
+
+    # Read the video file in chunks to avoid loading entire file into memory
+    video_bytes_io = io.BytesIO(await video_file.read())
+
+    # Use OpenCV VideoCapture to read frames
+    cap = cv2.VideoCapture(video_bytes_io.read())
+    if not cap.isOpened():
+        raise HTTPException(status_code=500, detail=&quot;Could not open video file.&quot;)
+
+    async def frame_generator():
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            # We use app.loop.run_in_executor for CPU-bound OpenCV tasks
+            # This offloads the work to a thread pool, keeping the main event loop free
+            _, buffer = cv2.imencode('.jpg', frame) # Encode frame to JPEG before sending to executor
+            processed_frame_bytes = await app.loop.run_in_executor(executor, process_frame_async, buffer.tobytes())
+
+            if processed_frame_bytes:
+                yield (b'--frame\r\n' # MJPEG stream header
+                       b'Content-Type: image/jpeg\r\n\r\n' + processed_frame_bytes + b'\r\n')
+
+        cap.release()
+
+    return StreamingResponse(frame_generator(), media_type=&quot;multipart/x-mixed-replace; boundary=frame&quot;)
+
+
+@app.get(&quot;/health&quot;)
+async def health_check():
+    return {&quot;status&quot;: &quot;ok&quot;, &quot;message&quot;: &quot;Video processing service is healthy&quot;}
+</code></pre>
+<p>To run this application:</p>
+<pre><code class="language-bash">uvicorn main:app --reload
+</code></pre>
+<p>Now, you can send a <code>POST</code> request to <code>/process-video/</code> with a video file, and it will return an MJPEG stream of processed frames. This example demonstrates reading a video, processing each frame using Canny edge detection, and streaming the results back. The crucial part is <code>app.loop.run_in_executor(executor, process_frame_async, ...)</code> which ensures that the CPU-intensive <code>cv2</code> operations are performed in a separate thread, preventing the FastAPI event loop from blocking.</p>
+<h3>Architectural Insights and Performance Trade-offs</h3>
+<ol>
+<li>
+<p><strong>CPU-bound vs. I/O-bound</strong>: Clearly differentiate these. FastAPI's <code>async/await</code> shines for I/O. For CPU-bound tasks like <code>cv2.Canny</code> or deep learning inference, <code>run_in_executor</code> is your friend. Without it, even with <code>async def</code>, the CPU-bound task would block the event loop until completion.</p>
+</li>
+<li>
+<p><strong>Memory Management</strong>: Reading an entire video file into memory (<code>video_file.read()</code>) is fine for smaller videos but problematic for large ones. For production, consider streaming the video file directly to <code>cv2.VideoCapture</code> or processing chunks. Libraries like <code>moviepy</code> or <code>ffmpeg-python</code> can assist with more robust video stream handling.</p>
+</li>
+<li>
+<p><strong>Scaling AI Inference</strong>: For complex AI models (e.g., large Transformers, Diffusion Models), CPU-based inference can be slow. Consider:</p>
+<ul>
+<li><strong>GPU Workers</strong>: Deploying your service on machines with GPUs and using frameworks like PyTorch or TensorFlow with CUDA support.</li>
+<li><strong>Dedicated Inference Services</strong>: Decoupling the video processing microservice from the AI inference service. Use a message queue (e.g., Redis, Kafka) to send frames for inference to a specialized GPU-enabled service and receive results asynchronously. This allows independent scaling.</li>
+<li><strong>Batch Processing</strong>: If real-time isn't strictly necessary, batching frames before sending them to an inference model can significantly improve GPU utilization and throughput.</li>
+</ul>
+</li>
+<li>
+<p><strong>Error Handling and Robustness</strong>: Implement comprehensive error handling for video decoding failures, network issues, and AI model inference errors. Consider retries with exponential backoff for transient issues.</p>
+</li>
+<li>
+<p><strong>Deployment</strong>: For production, <code>uvicorn</code> should be run with <code>gunicorn</code> (for process management) and multiple worker processes. Each <code>uvicorn</code> worker will have its own event loop and thread pool, maximizing concurrency.</p>
+<p><code>bash
+gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000</code></p>
+</li>
+</ol>
+<h2>Practical Tips for Optimization</h2>
+<ul>
+<li><strong>Optimize OpenCV Operations</strong>: Ensure your OpenCV code is as efficient as possible. Use vectorized operations where available. If using custom C++ extensions, compile them for optimal performance.</li>
+<li><strong>AI Model Optimization</strong>: Quantization, pruning, and using optimized runtimes (e.g., ONNX Runtime, TensorRT) can drastically reduce inference time and memory footprint for your AI models.</li>
+<li><strong>Data Serialization</strong>: When passing data between services or threads, optimize serialization/deserialization. For image data, JPEG or PNG compression is often a good balance between size and quality. For raw data, consider <code>numpy</code>'s binary formats or custom protocols.</li>
+<li><strong>Resource Monitoring</strong>: Continuously monitor CPU, GPU, and memory usage. Bottlenecks often appear in unexpected places.</li>
+<li><strong>Caching</strong>: If certain video segments or frames are frequently requested or require expensive processing, implement caching mechanisms.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>Building high-performance video processing microservices is a cornerstone of modern AI applications. By leveraging FastAPI's asynchronous capabilities, intelligently delegating CPU-bound tasks with <code>run_in_executor</code>, and integrating powerful libraries like OpenCV, we can construct robust, scalable, and responsive systems. The key lies in understanding the nature of your workloads – distinguishing between I/O and CPU operations – and architecting your solution to handle both efficiently. As AI models become more sophisticated and video data continues to grow, mastering these architectural patterns will be crucial for any AI Engineer looking to deploy cutting-edge computer vision solutions at scale.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
