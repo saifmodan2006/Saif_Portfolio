@@ -1,5 +1,20 @@
 [
   {
+    "slug": "leveraging-duckdb-high-performance-in-process-analytics-python",
+    "title": "Leveraging DuckDB for High-Performance In-Process Analytical Workflows in Python",
+    "metaDescription": "Unlock powerful, high-performance in-process analytics in Python applications using DuckDB. Learn to integrate, optimize, and scale your data workflows efficiently.",
+    "tags": [
+      "Python",
+      "Data Analytics",
+      "DuckDB",
+      "OLAP",
+      "Performance"
+    ],
+    "date": "2026-09-08",
+    "readingTime": "7 min read",
+    "image": "assets/blog/leveraging-duckdb-high-performance-in-process-analytics-python.jpg"
+  },
+  {
     "slug": "optimizing-high-throughput-vector-search-qdrant-polars",
     "title": "Optimizing High-Throughput Vector Search: Building a Hybrid Retrieval Pipeline with Qdrant, Polars, and FastAPI",
     "metaDescription": "Learn how to build and optimize a high-throughput hybrid vector search pipeline using Qdrant, Polars, and FastAPI for real-time AI applications.",

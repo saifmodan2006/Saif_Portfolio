@@ -42,4 +42,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://saif-portfolio-seven-sigma.vercel.app/blog/leveraging-duckdb-high-performance-in-process-analytics-python.html</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
