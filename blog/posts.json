@@ -1,5 +1,20 @@
 [
   {
+    "slug": "scaling-python-data-science-dask-distributed-computing",
+    "title": "Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask",
+    "metaDescription": "Unlock distributed computing in Python with Dask. This guide explores scaling data science workflows, from arrays to dataframes, for high-performance analytics and machine learning.",
+    "tags": [
+      "Python",
+      "Dask",
+      "Distributed Computing",
+      "Data Engineering",
+      "Performance Optimization"
+    ],
+    "date": "2026-09-09",
+    "readingTime": "7 min read",
+    "image": "assets/blog/scaling-python-data-science-dask-distributed-computing-cover.png"
+  },
+  {
     "slug": "productionizing-llms-vllm-triton-optimization",
     "title": "Productionizing LLMs: Optimizing Throughput with vLLM and NVIDIA Triton Inference Server",
     "metaDescription": "Learn how to scale LLM inference using vLLM's PagedAttention and NVIDIA Triton Inference Server for maximum throughput and low-latency production deployments.",

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask | Saif Modan</title>
+  <meta name="description" content="Unlock distributed computing in Python with Dask. This guide explores scaling data science workflows, from arrays to dataframes, for high-performance analytics and machine learning.">
+  <meta name="keywords" content="Python, Dask, Distributed Computing, Data Engineering, Performance Optimization, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-python-data-science-dask-distributed-computing.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask | Saif Modan">
+  <meta property="og:description" content="Unlock distributed computing in Python with Dask. This guide explores scaling data science workflows, from arrays to dataframes, for high-performance analytics and machine learning.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-python-data-science-dask-distributed-computing.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-python-data-science-dask-distributed-computing-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask">
+  <meta property="article:published_time" content="2026-09-09">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask | Saif Modan">
+  <meta name="twitter:description" content="Unlock distributed computing in Python with Dask. This guide explores scaling data science workflows, from arrays to dataframes, for high-performance analytics and machine learning.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-python-data-science-dask-distributed-computing-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask",
+  "description": "Unlock distributed computing in Python with Dask. This guide explores scaling data science workflows, from arrays to dataframes, for high-performance analytics and machine learning.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-python-data-science-dask-distributed-computing-cover.png"
+  ],
+  "datePublished": "2026-09-09",
+  "dateModified": "2026-09-09",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-python-data-science-dask-distributed-computing.html"
+  },
+  "keywords": "Python, Dask, Distributed Computing, Data Engineering, Performance Optimization"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">Dask</span><span class="blog-tag-pill">Distributed Computing</span><span class="blog-tag-pill">Data Engineering</span><span class="blog-tag-pill">Performance Optimization</span>
+          </div>
+          <h1 class="blog-article-title">Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-09</span>
+              <span>•</span>
+              <span>7 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/scaling-python-data-science-dask-distributed-computing-cover.png" alt="Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <h2>The Challenge of Scaling Python for Big Data</h2>
+<p>Python has firmly established itself as the lingua franca of data science and machine learning, thanks to its rich ecosystem of libraries like NumPy, Pandas, and Scikit-learn. However, as datasets grow from gigabytes to terabytes, and even petabytes, the inherent limitations of single-machine processing become glaringly apparent. Out-of-memory errors, painfully slow computations, and the inability to leverage modern multi-core or distributed hardware are common frustrations for data professionals.</p>
+<p>Traditional Python tools, while powerful, are primarily designed for in-memory, single-node operations. When faced with datasets that exceed available RAM, or computational tasks that demand parallel execution across multiple machines, developers often resort to complex, non-Pythonic solutions or expensive enterprise platforms. This introduces context switching, increases development overhead, and fragments the data science workflow. As an AI Developer and Data Analytics specialist, I've seen firsthand how crucial it is to bridge this gap, allowing data professionals to scale their familiar Python code without sacrificing productivity or performance.</p>
+<p>This is where Dask comes in. Dask is a flexible library for parallel computing in Python that allows you to scale NumPy, Pandas, and Scikit-learn workflows natively. It provides a unified API for building task graphs, enabling computations to be executed efficiently across multiple cores, multiple machines, or even cloud clusters. Dask empowers you to tackle truly large-scale data problems while staying firmly within the Python ecosystem.</p>
+<h2>What is Dask? A Unified Approach to Parallelism</h2>
+<p>At its core, Dask doesn't replace NumPy or Pandas; it extends them. It achieves this by breaking down large datasets into smaller chunks and defining a graph of tasks to process these chunks in parallel. This lazy evaluation approach means computations are only performed when their results are explicitly requested, allowing Dask to optimize the execution plan.</p>
+<p>Key components of Dask include:</p>
+<ul>
+<li><strong>Dask Arrays</strong>: Large N-dimensional arrays composed of many smaller NumPy arrays. They support most of the NumPy API but can operate on arrays larger than RAM.</li>
+<li><strong>Dask DataFrames</strong>: Large DataFrames composed of many smaller Pandas DataFrames, split row-wise. They mimic the Pandas API for common operations.</li>
+<li><strong>Dask Bags</strong>: Collections of arbitrary Python objects, useful for processing semi-structured or unstructured data.</li>
+<li><strong>Dask.delayed</strong>: A powerful decorator that turns any Python function into a Dask task, allowing you to build custom, arbitrary task graphs for complex workflows.</li>
+</ul>
+<h3>Dask Architecture: Schedulers and Workers</h3>
+<p>Dask's power comes from its ability to manage parallel execution. It relies on a client-scheduler-worker architecture:</p>
+<ul>
+<li><strong>Client</strong>: The entry point for users, allowing submission of Dask computations.</li>
+<li><strong>Scheduler</strong>: The brain of the operation. It receives the task graph from the client, optimizes it, and distributes tasks to workers.</li>
+<li><strong>Workers</strong>: Execute the actual computations on data chunks, reporting results back to the scheduler.</li>
+</ul>
+<p>For local development, Dask can use a <code>LocalCluster</code> that runs the scheduler and workers as threads or processes on your machine. For true distributed scaling, a <code>Distributed</code> client connects to a standalone Dask cluster, which can span many machines in a data center or cloud environment.</p>
+<h2>Practical Implementation: Scaling DataFrames with Dask</h2>
+<p>Let's illustrate Dask's utility with a common scenario: processing a large CSV file that won't fit into Pandas' memory.</p>
+<pre><code class="language-python">import dask.dataframe as dd
+from dask.distributed import Client
+
+# Start a Dask client (optional, but good practice for monitoring and distributed setup)
+client = Client(n_workers=4, threads_per_worker=2, memory_limit='2GB') # Adjust as needed
+print(client.dashboard_link)
+
+# Create a dummy large CSV file for demonstration
+# In a real scenario, you'd have an existing large file
+import pandas as pd
+import numpy as np
+
+num_records = 10_000_000 # 10 million records
+data = {
+    'transaction_id': np.arange(num_records),
+    'user_id': np.random.randint(1, 100000, num_records),
+    'amount': np.random.rand(num_records) * 1000,
+    'timestamp': pd.to_datetime('2023-01-01') + pd.to_timedelta(np.random.randint(0, 365*24*60*60, num_records), unit='s'),
+    'category': np.random.choice(['Electronics', 'Food', 'Apparel', 'Books', 'Home'], num_records)
+}
+df_large = pd.DataFrame(data)
+df_large.to_csv('large_transactions.csv', index=False)
+
+print(&quot;Dummy large_transactions.csv created.&quot;)
+
+# Load the large CSV using Dask DataFrame
+# Dask intelligently reads in chunks, creating a task graph
+ddf = dd.read_csv('large_transactions.csv')
+
+# Dask operations are lazy. No computation happens yet.
+print(&quot;Dask DataFrame head (lazy):&quot;)
+print(ddf.head())
+
+# Perform a series of Pandas-like operations
+# Find the average transaction amount per category for transactions &gt; 500
+filtered_ddf = ddf[ddf['amount'] &gt; 500]
+average_amount_per_category = filtered_ddf.groupby('category')['amount'].mean()
+
+# To trigger computation and get results back as a Pandas Series/DataFrame
+result = average_amount_per_category.compute()
+
+print(&quot;\nAverage transaction amount per category (for amounts &gt; 500):&quot;)
+print(result)
+
+client.close()
+</code></pre>
+<p>In this example, <code>dd.read_csv</code> doesn't load the entire file into memory; it creates a Dask DataFrame that represents the data and how it <em>could</em> be read. Operations like filtering and grouping build up a task graph. The <code>.compute()</code> call is the trigger, telling Dask to execute the graph, distributing the work across its workers, and then consolidating the final result back to a single Pandas Series. This allows you to process datasets much larger than your machine's RAM.</p>
+<h2>Beyond DataFrames: Dask Arrays and Custom Workflows</h2>
+<p>Dask Arrays provide a similar extension for NumPy. Imagine processing terabytes of satellite imagery or scientific simulation data; Dask Arrays allow you to apply complex N-dimensional operations without memory constraints.</p>
+<p>For highly customized, non-standard parallel tasks, <code>dask.delayed</code> is incredibly powerful. It allows you to wrap any Python function and build arbitrary task graphs, giving you fine-grained control over parallel execution.</p>
+<pre><code class="language-python">import dask
+import time
+
+@dask.delayed
+def increment(x):
+    time.sleep(1)
+    return x + 1
+
+@dask.delayed
+def add(x, y):
+    time.sleep(1)
+    return x + y
+
+# Build a custom task graph
+x = increment(1) # This is a delayed object, not 2
+y = increment(2) # This is a delayed object, not 3
+z = add(x, y)    # This is a delayed object, not 5
+
+# Visualize the task graph (requires graphviz)
+# z.visualize(filename='custom_workflow.png')
+
+# Compute the result
+result = z.compute()
+print(f&quot;Result of custom workflow: {result}&quot;) # Expected: 5
+
+# Without dask.delayed, this would take 3 seconds. With Dask, it takes ~2 seconds (increment tasks run in parallel).
+</code></pre>
+<p>This demonstrates how <code>dask.delayed</code> can parallelize any sequence of Python functions, making it ideal for complex ETL processes, Monte Carlo simulations, or custom ML pipelines.</p>
+<h2>Performance Considerations and Best Practices</h2>
+<p>While Dask is powerful, maximizing its performance requires understanding a few key principles:</p>
+<ol>
+<li><strong>Partitioning</strong>: Dask's performance heavily depends on how data is partitioned. Too many small partitions lead to high overhead; too few large ones can negate parallelism. Aim for partitions that are a few hundred MBs in size.</li>
+<li><strong>Memory Management</strong>: Monitor your Dask dashboard (accessible via <code>client.dashboard_link</code>). It provides invaluable insights into worker memory usage, CPU load, and task execution. Avoid shuffling large amounts of data unnecessarily, as this can be a memory and network bottleneck.</li>
+<li><strong>Scheduler Choice</strong>: For simple scripts and small clusters, the default single-machine scheduler (threads or processes) is often sufficient. For larger, multi-node deployments, the <code>dask.distributed</code> scheduler offers robust fault tolerance, advanced scheduling, and better monitoring.</li>
+<li><strong>Data Formats</strong>: Use efficient binary data formats like Parquet or Zarr instead of CSV for large datasets. They offer better read/write performance and support schema evolution.</li>
+<li><strong><code>compute()</code> vs. <code>persist()</code></strong>: <code>compute()</code> triggers execution and returns results to the client. <code>persist()</code> triggers execution but keeps the computed results on the Dask workers, making subsequent operations on that data much faster. Use <code>persist()</code> for intermediate results that will be used multiple times.</li>
+</ol>
+<h2>Integrating Dask with the ML Ecosystem</h2>
+<p>Dask isn't just for data manipulation; it also plays a crucial role in scaling machine learning. Libraries like Dask-ML provide distributed versions of popular Scikit-learn algorithms and utilities, allowing you to train models on datasets that would otherwise overwhelm a single machine. For deep learning, Dask can orchestrate data loading and preprocessing for frameworks like PyTorch and TensorFlow, ensuring your distributed training jobs are fed data efficiently.</p>
+<h2>Conclusion</h2>
+<p>Dask is an indispensable tool for any Python developer or data scientist looking to push the boundaries of what's possible with large datasets. It brings the power of distributed computing to the familiar Python ecosystem, allowing for seamless scaling of dataframes, arrays, and custom workflows. By understanding its architecture, leveraging its powerful APIs, and applying best practices, you can unlock unparalleled performance and tackle analytical challenges that were once considered intractable on standard hardware. As data volumes continue to explode, Dask will remain a critical component in building high-performance, scalable data analytics and machine learning pipelines, enabling us to derive insights faster and build more robust AI systems.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
