@@ -1,5 +1,20 @@
 [
   {
+    "slug": "generative-video-pipelines-svd-fastapi-tensorrt",
+    "title": "Architecting High-Performance Generative Video Pipelines: Deploying Stable Video Diffusion with FastAPI and TensorRT",
+    "metaDescription": "Master the deployment of Stable Video Diffusion models. Optimize AI video generation using FastAPI and NVIDIA TensorRT for production environments.",
+    "tags": [
+      "AI Engineering",
+      "Generative AI",
+      "FastAPI",
+      "NVIDIA TensorRT",
+      "Python"
+    ],
+    "date": "2026-09-10",
+    "readingTime": "4 min read",
+    "image": "assets/blog/generative-video-pipelines-svd-fastapi-tensorrt-cover.png"
+  },
+  {
     "slug": "real-time-audio-transcription-websockets-faster-whisper",
     "title": "Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper",
     "metaDescription": "Step-by-step guide to building a production-grade, low-latency live audio transcription pipeline using Python, WebSockets, and Faster-Whisper.",
