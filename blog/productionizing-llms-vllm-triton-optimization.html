@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Productionizing LLMs: Optimizing Throughput with vLLM and NVIDIA Triton Inference Server | Saif Modan</title>
+  <meta name="description" content="Learn how to scale LLM inference using vLLM's PagedAttention and NVIDIA Triton Inference Server for maximum throughput and low-latency production deployments.">
+  <meta name="keywords" content="LLMOps, vLLM, NVIDIA Triton, GPU Optimization, Python, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/productionizing-llms-vllm-triton-optimization.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Productionizing LLMs: Optimizing Throughput with vLLM and NVIDIA Triton Inference Server | Saif Modan">
+  <meta property="og:description" content="Learn how to scale LLM inference using vLLM's PagedAttention and NVIDIA Triton Inference Server for maximum throughput and low-latency production deployments.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/productionizing-llms-vllm-triton-optimization.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/productionizing-llms-vllm-triton-optimization-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Productionizing LLMs: Optimizing Throughput with vLLM and NVIDIA Triton Inference Server">
+  <meta property="article:published_time" content="2026-09-09">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Productionizing LLMs: Optimizing Throughput with vLLM and NVIDIA Triton Inference Server | Saif Modan">
+  <meta name="twitter:description" content="Learn how to scale LLM inference using vLLM's PagedAttention and NVIDIA Triton Inference Server for maximum throughput and low-latency production deployments.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/productionizing-llms-vllm-triton-optimization-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Productionizing LLMs: Optimizing Throughput with vLLM and NVIDIA Triton Inference Server",
+  "description": "Learn how to scale LLM inference using vLLM's PagedAttention and NVIDIA Triton Inference Server for maximum throughput and low-latency production deployments.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/productionizing-llms-vllm-triton-optimization-cover.png"
+  ],
+  "datePublished": "2026-09-09",
+  "dateModified": "2026-09-09",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/productionizing-llms-vllm-triton-optimization.html"
+  },
+  "keywords": "LLMOps, vLLM, NVIDIA Triton, GPU Optimization, Python"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">LLMOps</span><span class="blog-tag-pill">vLLM</span><span class="blog-tag-pill">NVIDIA Triton</span><span class="blog-tag-pill">GPU Optimization</span><span class="blog-tag-pill">Python</span>
+          </div>
+          <h1 class="blog-article-title">Productionizing LLMs: Optimizing Throughput with vLLM and NVIDIA Triton Inference Server</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-09</span>
+              <span>•</span>
+              <span>4 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/productionizing-llms-vllm-triton-optimization-cover.png" alt="Productionizing LLMs: Optimizing Throughput with vLLM and NVIDIA Triton Inference Server" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <h2>The Bottleneck of Modern AI: LLM Inference at Scale</h2>
+<p>Transitioning a Large Language Model (LLM) from a local notebook to a production-grade environment presents a unique set of challenges. While frameworks like Hugging Face Transformers are excellent for experimentation, they often struggle with high-concurrency demands due to memory fragmentation and inefficient Key-Value (KV) cache management. In a production setting, the goal shifts from simply generating text to maximizing throughput (requests per second) while maintaining strict latency Service Level Agreements (SLAs).</p>
+<p>The primary culprit for poor performance is the linear growth of the KV cache, which stores the attention states of previous tokens. Without sophisticated management, this leads to 'internal fragmentation,' where large blocks of GPU memory are reserved but underutilized. This article explores how to architect a high-performance LLM serving stack using <strong>vLLM</strong> for its PagedAttention algorithm and <strong>NVIDIA Triton Inference Server</strong> for enterprise-grade model orchestration.</p>
+<h2>The Architecture: vLLM and PagedAttention</h2>
+<p>vLLM revolutionized LLM serving by introducing <strong>PagedAttention</strong>. Inspired by virtual memory in operating systems, PagedAttention partitions the KV cache into fixed-size blocks. These blocks do not need to be contiguous, allowing the system to manage memory with near-zero waste. </p>
+<p>When we wrap vLLM within the NVIDIA Triton Inference Server, we gain additional production-ready features: <br />
+- <strong>Model Ensembling:</strong> Chaining LLMs with preprocessing or post-processing logic.<br />
+- <strong>Dynamic Batching:</strong> Grouping individual requests into a single execution to saturate GPU compute.<br />
+- <strong>Multi-Model Support:</strong> Running multiple versions or different models on the same hardware.</p>
+<h3>Designing the Triton Backend for vLLM</h3>
+<p>To deploy this, we typically use the Triton Python Backend or the dedicated vLLM-Triton integration. Below is a conceptual implementation of a <code>model.py</code> that utilizes the vLLM engine within a Triton environment.</p>
+<pre><code class="language-python">import json
+import triton_python_backend_utils as pb_utils
+from vllm import LLM, SamplingParams
+
+class TritonPythonModel:
+    def initialize(self, args):
+        self.model_config = json.loads(args['model_config'])
+
+        # Initialize vLLM engine
+        self.llm = LLM(
+            model=&quot;casperhansen/llama-3-70b-instruct-awq&quot;,
+            quantization=&quot;awq&quot;,
+            tensor_parallel_size=2, # Spread across 2 GPUs
+            max_model_len=4096,
+            gpu_memory_utilization=0.90
+        )
+
+    def execute(self, requests):
+        responses = []
+        for request in requests:
+            # Extract input tensor
+            prompt_tensor = pb_utils.get_input_tensor_by_name(request, &quot;PROMPT&quot;)
+            prompt = prompt_tensor.as_numpy()[0].decode(&quot;utf-8&quot;)
+
+            sampling_params = SamplingParams(
+                temperature=0.7,
+                top_p=0.95,
+                max_tokens=512
+            )
+
+            # Generate output
+            outputs = self.llm.generate([prompt], sampling_params)
+            result_text = outputs[0].outputs[0].text
+
+            # Prepare Triton response
+            out_tensor = pb_utils.Tensor(&quot;TEXT&quot;, np.array([result_text.encode(&quot;utf-8&quot;)], dtype=object))
+            responses.append(pb_utils.InferenceResponse(output_tensors=[out_tensor]))
+
+        return responses
+</code></pre>
+<h2>Optimizing Throughput with Quantization and Parallelism</h2>
+<h3>1. Model Quantization (AWQ vs. GPTQ)</h3>
+<p>Deploying 70B parameter models requires significant VRAM. By using <strong>Activation-aware Weight Quantization (AWQ)</strong>, we can compress the model to 4-bit precision with negligible accuracy loss. AWQ is particularly effective for vLLM because it maintains high hardware efficiency on modern NVIDIA architectures (Ampere/Hopper).</p>
+<h3>2. Tensor Parallelism</h3>
+<p>For models that exceed the memory of a single GPU, vLLM utilizes <strong>Tensor Parallelism (TP)</strong> via Ray or NCCL. By setting <code>tensor_parallel_size</code>, we split the weight matrices across multiple GPUs. This reduces the memory footprint per device and increases the aggregate compute bandwidth available for the attention mechanism.</p>
+<h2>The Configuration: Triton <code>config.pbtxt</code></h2>
+<p>Triton requires a configuration file to define the input/output schema and the instance group. For LLMs, we often use a single instance per node to avoid GPU memory contention.</p>
+<pre><code class="language-protobuf">name: &quot;vllm_llm_engine&quot;
+backend: &quot;python&quot;
+max_batch_size: 0 # vLLM handles batching internally
+
+input [
+  {
+    name: &quot;PROMPT&quot;
+    data_type: TYPE_STRING
+    dims: [ 1 ]
+  }
+]
+output [
+  {
+    name: &quot;TEXT&quot;
+    data_type: TYPE_STRING
+    dims: [ 1 ]
+  }
+]
+
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+    gpus: [ 0, 1 ]
+  }
+]
+</code></pre>
+<h2>Performance Trade-offs: Latency vs. Throughput</h2>
+<p>In a real-world scenario, you must decide between optimizing for <strong>Time To First Token (TTFT)</strong> or <strong>Inter-Token Latency (ITL)</strong>.</p>
+<ul>
+<li><strong>High Throughput:</strong> By increasing the <code>max_num_seqs</code> in vLLM, you can process more concurrent users. However, as the GPU reaches its compute limit, the ITL will increase, potentially making the experience feel 'sluggish' for the end user.</li>
+<li><strong>Low Latency:</strong> Reducing the batch size and prioritizing compute for fewer requests ensures a snappy response but increases the cost-per-request as the GPU remains underutilized.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>Building a production LLM pipeline requires moving beyond simple inference scripts. By combining the memory efficiency of vLLM's PagedAttention with the robust orchestration of NVIDIA Triton, engineers can build systems capable of handling thousands of concurrent requests. As the ecosystem evolves, techniques like <strong>Continuous Batching</strong> and <strong>Speculative Decoding</strong> will further push the boundaries of what is possible, but a solid foundation in memory management remains the key to scalable AI engineering.</p>
+<p>When deploying these systems, always monitor your GPU utilization and KV cache usage. Tools like Prometheus and Grafana, integrated with Triton’s metrics endpoint, are essential for identifying bottlenecks before they impact your users.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
