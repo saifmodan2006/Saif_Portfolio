@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper | Saif Modan</title>
+  <meta name="description" content="Step-by-step guide to building a production-grade, low-latency live audio transcription pipeline using Python, WebSockets, and Faster-Whisper.">
+  <meta name="keywords" content="Python, WebSockets, Speech Recognition, PyTorch, AI Engineering, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/real-time-audio-transcription-websockets-faster-whisper.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper | Saif Modan">
+  <meta property="og:description" content="Step-by-step guide to building a production-grade, low-latency live audio transcription pipeline using Python, WebSockets, and Faster-Whisper.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/real-time-audio-transcription-websockets-faster-whisper.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/real-time-audio-transcription-websockets-faster-whisper-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper">
+  <meta property="article:published_time" content="2026-09-09">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper | Saif Modan">
+  <meta name="twitter:description" content="Step-by-step guide to building a production-grade, low-latency live audio transcription pipeline using Python, WebSockets, and Faster-Whisper.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/real-time-audio-transcription-websockets-faster-whisper-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper",
+  "description": "Step-by-step guide to building a production-grade, low-latency live audio transcription pipeline using Python, WebSockets, and Faster-Whisper.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/real-time-audio-transcription-websockets-faster-whisper-cover.png"
+  ],
+  "datePublished": "2026-09-09",
+  "dateModified": "2026-09-09",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/real-time-audio-transcription-websockets-faster-whisper.html"
+  },
+  "keywords": "Python, WebSockets, Speech Recognition, PyTorch, AI Engineering"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">WebSockets</span><span class="blog-tag-pill">Speech Recognition</span><span class="blog-tag-pill">PyTorch</span><span class="blog-tag-pill">AI Engineering</span>
+          </div>
+          <h1 class="blog-article-title">Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-09</span>
+              <span>•</span>
+              <span>5 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/real-time-audio-transcription-websockets-faster-whisper-cover.png" alt="Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <h2>Introduction</h2>
+<p>Real-time speech-to-text (STT) transcription has transitioned from a luxury feature to a core requirement for modern collaborative tools, customer support automation, and accessibility services. However, processing continuous, high-fidelity audio streams with deep learning models in real time introduces significant engineering challenges. Developers must balance computational constraints, network overhead, and ML model latency to achieve a seamless user experience.</p>
+<p>While OpenAI's Whisper model set a new benchmark for transcription accuracy, running the standard PyTorch implementation in real-time pipelines often proves too slow and resource-intensive for production environments. This is where <strong>Faster-Whisper</strong> comes in. By leveraging CTranslate2—a fast inference engine for Transformer models—Faster-Whisper achieves up to 4x speedups and reduced memory footprints compared to the original implementation through weight quantization and optimized computation graphs.</p>
+<p>In this technical guide, we will design and build a production-grade, ultra-low latency real-time audio transcription pipeline using <strong>FastAPI WebSockets</strong>, <strong>Faster-Whisper</strong>, and <strong>Silero Voice Activity Detection (VAD)</strong>. </p>
+<hr />
+<h2>System Architecture Overview</h2>
+<p>To achieve real-time streaming transcription, we cannot simply send a massive audio file to an API endpoint. We must stream chunked audio data over a persistent connection, detect when a user is actively speaking, process the speech segments immediately, and return the transcribed text with minimal delay.</p>
+<pre><code>[Client Microphone] 
+       │ (Continuous Binary PCM Audio Chunks over WebSocket)
+       ▼
+[FastAPI WebSocket Server]
+       │
+       ├─► [Silero VAD Filter] (Discard Silence / Detect Speech Boundaries)
+       │
+       └─► [Audio Buffer Accumulator]
+                 │
+                 ▼ (Complete Speech Segments)
+       [Faster-Whisper Engine] (CTranslate2 Backend)
+                 │
+                 ▼ (JSON Text Tokens)
+[Client UI Updates]
+</code></pre>
+<h3>Key Architectural Components:</h3>
+<ol>
+<li><strong>WebSocket Protocol</strong>: Provides a persistent, full-duplex communication channel over a single TCP connection, eliminating HTTP handshake overhead for every audio packet.</li>
+<li><strong>Voice Activity Detection (VAD)</strong>: Acts as a gatekeeper. By ignoring silence or background noise, we avoid running expensive Transformer inference on non-speech segments, saving massive compute resources.</li>
+<li><strong>Faster-Whisper Engine</strong>: Performs the actual audio-to-text translation using optimized 8-bit quantized weights (<code>int8</code> or <code>float16</code> depending on hardware availability).</li>
+</ol>
+<hr />
+<h2>Setting Up the Live Transcription Pipeline</h2>
+<p>Let's write a complete, production-ready implementation of this pipeline. We'll start by defining our dependencies:</p>
+<pre><code class="language-bash">pip install fastapi uvicorn faster-whisper numpy websockets
+</code></pre>
+<h3>The Core Transcriber and VAD Implementation</h3>
+<p>Below is the complete implementation of our asynchronous transcription worker. We configure the system to use <code>faster-whisper</code> combined with its built-in Silero VAD filter to ensure we only transcribe actual speech segments.</p>
+<pre><code class="language-python">import asyncio
+import io
+import numpy as np
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from faster_whisper import WhisperModel
+
+app = FastAPI(title=&quot;Real-Time Transcription Service&quot;)
+
+# Initialize the Faster-Whisper Model
+# Using 'small' for a balance of speed and accuracy; 'float16' for GPU, 'int8' for CPU
+MODEL_SIZE = &quot;small&quot;
+DEVICE = &quot;cuda&quot; if WhisperModel.is_cuda_available() else &quot;cpu&quot;
+COMPUTE_TYPE = &quot;float16&quot; if DEVICE == &quot;cuda&quot; else &quot;int8&quot;
+
+print(f&quot;Loading model '{MODEL_SIZE}' on device '{DEVICE}' with compute type '{COMPUTE_TYPE}'...&quot;)
+whisper_model = WhisperModel(MODEL_SIZE, device=DEVICE, compute_type=COMPUTE_TYPE)
+
+class AudioProcessor:
+    def __init__(self, sample_rate: int = 16000):
+        self.sample_rate = sample_rate
+        self.buffer = bytearray()
+        # Whisper expects 16kHz mono audio
+        self.bytes_per_sample = 2  # 16-bit PCM
+        self.chunk_duration_sec = 0.5  # Process in 500ms intervals
+        self.chunk_size = int(self.sample_rate * self.bytes_per_sample * self.chunk_duration_sec)
+
+    def append_data(self, data: bytes):
+        self.buffer.extend(data)
+
+    def has_enough_data(self) -&gt; bool:
+        return len(self.buffer) &gt;= self.chunk_size
+
+    def get_audio_segment(self) -&gt; np.ndarray:
+        # Extract chunk and convert raw PCM16 bytes to float32 normalized between -1.0 and 1.0
+        raw_data = bytes(self.buffer[:self.chunk_size])
+        del self.buffer[:self.chunk_size]
+
+        audio_np = np.frombuffer(raw_data, dtype=np.int16).astype(np.float32) / 32768.0
+        return audio_np
+
+@app.websocket(&quot;/ws/transcribe&quot;)
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    processor = AudioProcessor()
+    print(&quot;Client connected to transcription stream.&quot;)
+
+    try:
+        while True:
+            # Receive raw binary PCM audio data from the client
+            data = await websocket.receive_bytes()
+            processor.append_data(data)
+
+            if processor.has_enough_data():
+                audio_segment = processor.get_audio_segment()
+
+                # Run the transcription in the default executor to prevent blocking the event loop
+                loop = asyncio.get_running_loop()
+                segments, info = await loop.run_in_executor(
+                    None, 
+                    lambda: whisper_model.transcribe(
+                        audio_segment, 
+                        beam_size=5,
+                        vad_filter=True, # Built-in Silero VAD
+                        vad_parameters=dict(min_speech_duration_ms=250)
+                    )
+                )
+
+                # Collect and format transcription results
+                for segment in segments:
+                    if segment.text.strip():
+                        payload = {
+                            &quot;text&quot;: segment.text.strip(),
+                            &quot;start&quot;: round(segment.start, 2),
+                            &quot;end&quot;: round(segment.end, 2),
+                            &quot;confidence&quot;: round(segment.avg_logprob, 4)
+                        }
+                        await websocket.send_json(payload)
+
+    except WebSocketDisconnect:
+        print(&quot;Client disconnected.&quot;)
+    except Exception as e:
+        print(f&quot;Error in transcription pipeline: {e}&quot;)
+        await websocket.close()
+
+if __name__ == &quot;__main__&quot;:
+    import uvicorn
+    uvicorn.run(app, host=&quot;0.0.0.0&quot;, port=8000)
+</code></pre>
+<hr />
+<h2>Performance Trade-offs &amp; Production Optimizations</h2>
+<p>Deploying real-time models requires careful tuning of several operational parameters:</p>
+<h3>1. CPU vs. GPU Acceleration</h3>
+<p>For enterprise-grade low latency (sub-200ms), running on a CUDA-enabled GPU with <code>float16</code> or <code>int8_float16</code> quantization is highly recommended. If you must deploy on CPU (e.g., cost-optimized AWS ECS tasks), use <code>int8</code> quantization. This reduces memory bandwidth pressure and uses Intel's or AMD's vectorized instructions (AVX-512) to speed up execution.</p>
+<h3>2. Guarding the Async Event Loop</h3>
+<p>Because ML inference is CPU-bound, running <code>whisper_model.transcribe</code> directly inside an <code>async def</code> function will block the entire FastAPI event loop, freezing all other active WebSocket connections. We mitigate this by offloading the inference task to an external thread pool using <code>loop.run_in_executor(None, ...)</code>.</p>
+<h3>3. VAD Tuning</h3>
+<p>Without a VAD filter, Whisper will attempt to translate silence or background white noise, often generating repetitive, hallucinated phrases (e.g., "Thank you for watching"). Enabling <code>vad_filter=True</code> filters out silent segments before they reach the Transformer architecture, saving valuable compute cycles.</p>
+<hr />
+<h2>Conclusion</h2>
+<p>By pairing FastAPI's high-performance WebSockets with the blazing-fast execution of Faster-Whisper, we've built a robust, low-latency live audio transcription system. Offloading CPU-bound workloads to thread executors guarantees that our server remains highly responsive, even under concurrent user loads. For production scaling, consider distributing WebSocket connections across multiple worker nodes behind a load balancer and routing audio processing tasks to a centralized GPU worker pool via a message broker like Redis or RabbitMQ.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>

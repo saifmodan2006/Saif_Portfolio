@@ -1,5 +1,20 @@
 [
   {
+    "slug": "real-time-audio-transcription-websockets-faster-whisper",
+    "title": "Building an Ultra-Low Latency Real-Time Audio Transcription Pipeline with WebSockets and Faster-Whisper",
+    "metaDescription": "Step-by-step guide to building a production-grade, low-latency live audio transcription pipeline using Python, WebSockets, and Faster-Whisper.",
+    "tags": [
+      "Python",
+      "WebSockets",
+      "Speech Recognition",
+      "PyTorch",
+      "AI Engineering"
+    ],
+    "date": "2026-09-09",
+    "readingTime": "5 min read",
+    "image": "assets/blog/real-time-audio-transcription-websockets-faster-whisper-cover.png"
+  },
+  {
     "slug": "leveraging-duckdb-high-performance-in-process-analytics-python",
     "title": "Leveraging DuckDB for High-Performance In-Process Analytical Workflows in Python",
     "metaDescription": "Unlock powerful, high-performance in-process analytics in Python applications using DuckDB. Learn to integrate, optimize, and scale your data workflows efficiently.",

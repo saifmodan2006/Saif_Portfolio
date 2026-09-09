@@ -48,4 +48,10 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://saif-portfolio-seven-sigma.vercel.app/blog/real-time-audio-transcription-websockets-faster-whisper.html</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
