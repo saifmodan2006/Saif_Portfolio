@@ -31,6 +31,8 @@ jobs:
       - name: Generate Daily Blog Post
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DASHSCOPE_API_KEY: ${{ secrets.DASHSCOPE_API_KEY }}
+          DASHSCOPE_WORKSPACE_ID: ${{ secrets.DASHSCOPE_WORKSPACE_ID }}
           BLOG_NICHE: ${{ vars.BLOG_NICHE }}
         run: |
           python generate_blog.py

@@ -12,7 +12,7 @@
     ],
     "date": "2026-09-08",
     "readingTime": "7 min read",
-    "image": "assets/blog/leveraging-duckdb-high-performance-in-process-analytics-python.jpg"
+    "image": "assets/blog/leveraging-duckdb-high-performance-in-process-analytics-python-cover.png"
   },
   {
     "slug": "optimizing-high-throughput-vector-search-qdrant-polars",
@@ -27,7 +27,7 @@
     ],
     "date": "2026-09-07",
     "readingTime": "6 min read",
-    "image": "assets/blog/optimizing-high-throughput-vector-search-qdrant-polars.jpg"
+    "image": "assets/blog/optimizing-high-throughput-vector-search-qdrant-polars-cover.png"
   },
   {
     "slug": "architecting-resilient-event-driven-data-pipelines-async-python-kafka",
@@ -42,7 +42,7 @@
     ],
     "date": "2026-09-07",
     "readingTime": "7 min read",
-    "image": "assets/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka.jpg"
+    "image": "assets/blog/architecting-resilient-event-driven-data-pipelines-async-python-kafka-cover.png"
   },
   {
     "slug": "scaling-real-time-ml-inference-ray-fastapi-caching",
@@ -57,7 +57,7 @@
     ],
     "date": "2026-09-07",
     "readingTime": "9 min read",
-    "image": "assets/blog/scaling-real-time-ml-inference-ray-fastapi-caching.jpg"
+    "image": "assets/blog/scaling-real-time-ml-inference-ray-fastapi-caching-cover.png"
   },
   {
     "slug": "high-performance-async-video-processing-fastapi-opencv",
@@ -72,6 +72,6 @@
     ],
     "date": "2026-09-07",
     "readingTime": "7 min read",
-    "image": "assets/blog/high-performance-async-video-processing-fastapi-opencv.jpg"
+    "image": "assets/blog/high-performance-async-video-processing-fastapi-opencv-cover.png"
   }
 ]

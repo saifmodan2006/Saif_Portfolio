@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Saif Modan — Automated Daily Blog Publisher
 Generates daily technical articles on AI, Python, FastAPI, Automation, and Engineering
-using Gemini 2.0 Flash and Pollinations.ai, outputting SEO-optimized static HTML pages.
+using Gemini Flash, DashScope Qwen-Image, and Pollinations.ai fallback.
 """
 
 import os
@@ -13,8 +15,16 @@ import random
 import datetime
 import urllib.parse
 import xml.etree.ElementTree as ET
+from typing import Optional, List, Dict, Any, Union
 import requests
 import markdown
+
+try:
+    import dashscope  # type: ignore
+    from dashscope import ImageSynthesis  # type: ignore
+except Exception:
+    dashscope = None
+    ImageSynthesis = None
 
 if sys.platform == "win32":
     try:
@@ -176,22 +186,94 @@ Output ONLY valid JSON matching this schema:
     sys.exit(1)
 
 
+def generate_cover_image_qwen(prompt: str, slug: str) -> Optional[str]:
+    """Generate cover image using Alibaba DashScope Qwen-Image model (qwen-image-plus)."""
+    if dashscope is None or ImageSynthesis is None:
+        print("[WARN] dashscope SDK not installed. Skipping Qwen-Image generation.", flush=True)
+        return None
+
+    api_key = os.environ.get("DASHSCOPE_API_KEY", "").strip()
+    if not api_key:
+        print("[WARN] DASHSCOPE_API_KEY not found in environment. Skipping Qwen-Image generation.", flush=True)
+        return None
+
+    dashscope.api_key = api_key
+    workspace_id = os.environ.get("DASHSCOPE_WORKSPACE_ID", "").strip()
+    if workspace_id:
+        dashscope.base_http_api_url = f"https://{workspace_id}.ap-southeast-1.maas.aliyuncs.com/api/v1"
+    else:
+        dashscope.base_http_api_url = "https://dashscope-intl.aliyuncs.com/api/v1"
+
+    output_path = os.path.join(ASSETS_BLOG_DIR, f"{slug}-cover.png")
+    relative_path = f"assets/blog/{slug}-cover.png"
+
+    clean_prompt = prompt if prompt else "minimalist 3d glowing neural network graph obsidian glass emerald lighting cinematic"
+    print(f"[INFO] Generating cover image via DashScope Qwen-Image for '{slug}'...", flush=True)
+
+    for attempt in range(1, 3):
+        try:
+            print(f"[INFO] Qwen-Image generation attempt {attempt}/2...", flush=True)
+            response = ImageSynthesis.call(
+                model="qwen-image-plus",
+                prompt=clean_prompt,
+                negative_prompt="low resolution, blurry, distorted text, watermark, logo",
+                n=1,
+                size="1664*928",
+                prompt_extend=True,
+                watermark=False
+            )
+
+            status_code = getattr(response, "status_code", None)
+            if status_code == 200:
+                output = getattr(response, "output", None)
+                results = getattr(output, "results", None)
+                if results is None and isinstance(output, dict):
+                    results = output.get("results")
+
+                if results and len(results) > 0:
+                    first_res = results[0]
+                    image_url = getattr(first_res, "url", None) or (first_res.get("url") if isinstance(first_res, dict) else None)
+                    if image_url:
+                        print(f"[INFO] Qwen-Image generated URL successfully. Downloading immediately...", flush=True)
+                        img_resp = requests.get(image_url, timeout=30)
+                        if img_resp.status_code == 200 and len(img_resp.content) > 1000:
+                            with open(output_path, "wb") as f:
+                                f.write(img_resp.content)
+                            print(f"[SUCCESS] Qwen cover image saved to {output_path} ({len(img_resp.content)} bytes)", flush=True)
+                            return relative_path
+                        else:
+                            print(f"[WARN] Failed to download image from Qwen URL (HTTP {img_resp.status_code})", flush=True)
+                else:
+                    print(f"[WARN] Qwen response did not contain image results: {output}", flush=True)
+            else:
+                msg = getattr(response, "message", str(response))
+                print(f"[WARN] Qwen-Image returned HTTP status {status_code}: {msg}", flush=True)
+                if attempt < 2:
+                    time.sleep(2)
+        except Exception as e:
+            print(f"[WARN] Attempt {attempt} error during Qwen image generation: {e}", flush=True)
+            if attempt < 2:
+                time.sleep(2)
+
+    return None
+
+
 def download_cover_image(image_prompt: str, slug: str) -> str:
     """Download cover image from Pollinations.ai with graceful fallback."""
-    print(f"[INFO] Generating cover image for '{slug}' via Pollinations.ai...", flush=True)
+    print(f"[INFO] Generating cover image for '{slug}' via Pollinations.ai fallback...", flush=True)
     
     clean_prompt = image_prompt if image_prompt else "modern 3d artificial intelligence neural network obsidian emerald lighting"
     encoded_prompt = urllib.parse.quote(clean_prompt)
     seed = random.randint(10000, 999999)
     image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1200&height=630&seed={seed}&nologo=true"
     
-    output_path = os.path.join(ASSETS_BLOG_DIR, f"{slug}.jpg")
-    relative_path = f"assets/blog/{slug}.jpg"
+    output_path = os.path.join(ASSETS_BLOG_DIR, f"{slug}-cover.png")
+    relative_path = f"assets/blog/{slug}-cover.png"
     
     # Try up to 2 times with 15s timeout
     for attempt in range(1, 3):
         try:
-            print(f"[INFO] Image download attempt {attempt}...", flush=True)
+            print(f"[INFO] Pollinations download attempt {attempt}/2...", flush=True)
             resp = requests.get(image_url, timeout=15, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
             if resp.status_code == 200 and len(resp.content) > 2000:
                 with open(output_path, "wb") as f:
@@ -199,9 +281,9 @@ def download_cover_image(image_prompt: str, slug: str) -> str:
                 print(f"[SUCCESS] Cover image saved to {output_path} ({len(resp.content)} bytes)", flush=True)
                 return relative_path
             else:
-                print(f"[WARN] Attempt {attempt} returned status {resp.status_code}", flush=True)
+                print(f"[WARN] Pollinations attempt {attempt} returned status {resp.status_code}", flush=True)
         except Exception as e:
-            print(f"[WARN] Attempt {attempt} failed: {e}", flush=True)
+            print(f"[WARN] Pollinations attempt {attempt} failed: {e}", flush=True)
             
     # Fallback to og-image banner
     print("[WARN] Pollinations.ai image download timed out/failed. Using fallback banner.", flush=True)
@@ -211,6 +293,37 @@ def download_cover_image(image_prompt: str, slug: str) -> str:
             dst.write(src.read())
         print(f"[SUCCESS] Fallback cover image created at {output_path}", flush=True)
     return relative_path
+
+
+def generate_cover_image(image_prompt: str, slug: str) -> str:
+    """Generate cover image: try Qwen-Image first, then Pollinations.ai, then fallback banner."""
+    # 1. Try Qwen-Image via DashScope
+    try:
+        qwen_img = generate_cover_image_qwen(image_prompt, slug)
+        if qwen_img:
+            return qwen_img
+    except Exception as e:
+        print(f"[WARN] Error during Qwen-Image generation: {e}", flush=True)
+
+    # 2. Fall back to Pollinations.ai
+    print("[INFO] Falling back to Pollinations.ai for cover image...", flush=True)
+    try:
+        pollinations_img = download_cover_image(image_prompt, slug)
+        if pollinations_img:
+            return pollinations_img
+    except Exception as e:
+        print(f"[WARN] Error during Pollinations.ai generation: {e}", flush=True)
+
+    # 3. Last-resort fallback to default banner
+    print("[WARN] All cover image generators failed. Using default banner.", flush=True)
+    fallback_source = os.path.join(BASE_DIR, "assets", "og-image.png")
+    output_path = os.path.join(ASSETS_BLOG_DIR, f"{slug}-cover.png")
+    relative_path = f"assets/blog/{slug}-cover.png"
+    if os.path.exists(fallback_source):
+        with open(fallback_source, "rb") as src, open(output_path, "wb") as dst:
+            dst.write(src.read())
+        return relative_path
+    return "assets/og-image.png"
 
 
 def render_post_html(post: dict, html_content: str) -> str:
@@ -992,8 +1105,8 @@ def main():
     if slug in existing_slugs:
         print(f"[WARN] Post with slug '{slug}' already exists in posts.json. Updating content idempotently...")
     
-    # 4. Generate cover image via Pollinations.ai
-    image_rel_path = download_cover_image(image_prompt, slug)
+    # 4. Generate cover image (Qwen-Image with Pollinations.ai fallback)
+    image_rel_path = generate_cover_image(image_prompt, slug)
     
     # 5. Convert Markdown to HTML
     html_content = markdown.markdown(
