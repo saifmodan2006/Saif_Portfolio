@@ -82,11 +82,9 @@ import time
 
 CANDIDATE_MODELS = [
     "gemini-2.5-flash",
-    "gemini-3.6-flash",
-    "gemini-3.5-flash",
-    "gemini-2.5-flash-lite",
+    "gemini-3-flash-preview",
+    "gemini-3.1-flash-lite-preview",
     "gemini-flash-latest",
-    "gemini-2.5-pro"
 ]
 
 
@@ -148,12 +146,15 @@ Output ONLY valid JSON matching this schema:
     for model_name in CANDIDATE_MODELS:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
         print(f"[INFO] Attempting generation with model '{model_name}'...", flush=True)
-        for attempt in range(1, 3):
+        for attempt in range(1, 4):
             try:
-                response = requests.post(url, headers=headers, json=payload, timeout=45)
+                response = requests.post(url, headers=headers, json=payload, timeout=60)
                 if response.status_code == 200:
                     res_data = response.json()
-                    raw_text = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    candidates = res_data.get("candidates", [])
+                    if not candidates:
+                        raise ValueError(f"No candidates returned in response: {res_data}")
+                    raw_text = candidates[0]["content"]["parts"][0]["text"].strip()
                     data = json.loads(raw_text)
                     
                     # Sanitize slug
@@ -170,17 +171,19 @@ Output ONLY valid JSON matching this schema:
                     print(f"[SUCCESS] Article successfully generated using '{model_name}'.", flush=True)
                     return data
                 elif response.status_code in [429, 500, 503]:
-                    print(f"[WARN] Model '{model_name}' returned HTTP {response.status_code} (attempt {attempt}/2). Retrying in 2s...", flush=True)
+                    backoff = attempt * 3
+                    print(f"[WARN] Model '{model_name}' returned HTTP {response.status_code} (attempt {attempt}/3). Retrying in {backoff}s...", flush=True)
                     last_error = response.text
-                    time.sleep(2)
+                    time.sleep(backoff)
                 else:
-                    print(f"[WARN] Model '{model_name}' returned HTTP {response.status_code}: {response.text[:150]}", flush=True)
+                    err_snippet = response.text[:160].replace("\n", " ")
+                    print(f"[WARN] Model '{model_name}' returned HTTP {response.status_code}: {err_snippet}", flush=True)
                     last_error = response.text
                     break
             except Exception as e:
                 print(f"[WARN] Attempt {attempt} error with model '{model_name}': {e}", flush=True)
                 last_error = str(e)
-                time.sleep(1)
+                time.sleep(2)
             
     print(f"[ERROR] All candidate Gemini models failed. Last error: {last_error}", file=sys.stderr, flush=True)
     sys.exit(1)
