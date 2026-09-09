@@ -114,7 +114,7 @@ Requirements:
    - Include realistic code examples with syntax formatting (e.g. ```python ... ```).
    - Provide architectural insights, performance trade-offs, practical tips, and a thoughtful conclusion.
    - Tone: Pragmatic, professional, insightful, developer-focused.
-6. Image Prompt: Max 18 words describing an abstract, modern, sleek 3D tech visualization representing the topic (e.g., "minimalist 3d glowing neural network graph obsidian glass emerald lighting cinematic"). IMPORTANT: Strictly NO text, NO typography, NO letters, NO words in the image.
+6. Image Prompt: A concrete, high-detail visual description (15-25 words) depicting real physical tech, servers, microchips, data conduits, or hardware specific to the topic (e.g., "photorealistic 3d render of distributed high performance server racks, fiber optic conduits, futuristic hardware microchips, dark cinematic lighting"). Strictly avoid generic abstract glowing spheres, blobs, bowls, or floating crystals. IMPORTANT: Strictly NO text, NO typography, NO letters, NO words in the image.
 
 Output ONLY valid JSON matching this schema:
 {{
