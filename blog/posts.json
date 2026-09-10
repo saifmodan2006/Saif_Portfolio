@@ -1,5 +1,20 @@
 [
   {
+    "slug": "unlocking-edge-ai-performance-quantization-onnx-python",
+    "title": "Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments",
+    "metaDescription": "Boost Python AI model performance on edge devices. Learn quantization techniques and leverage ONNX Runtime for faster, memory-efficient inference in resource-constrained environments.",
+    "tags": [
+      "Python",
+      "AI Engineering",
+      "Edge AI",
+      "ONNX",
+      "Quantization"
+    ],
+    "date": "2026-09-10",
+    "readingTime": "10 min read",
+    "image": "assets/blog/unlocking-edge-ai-performance-quantization-onnx-python-cover.png"
+  },
+  {
     "slug": "scaling-python-data-science-dask-distributed-computing",
     "title": "Scaling Python's Data Science Workflows: A Deep Dive into Distributed Computing with Dask",
     "metaDescription": "Unlock distributed computing in Python with Dask. This guide explores scaling data science workflows, from arrays to dataframes, for high-performance analytics and machine learning.",

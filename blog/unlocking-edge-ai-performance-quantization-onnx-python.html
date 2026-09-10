@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments | Saif Modan</title>
+  <meta name="description" content="Boost Python AI model performance on edge devices. Learn quantization techniques and leverage ONNX Runtime for faster, memory-efficient inference in resource-constrained environments.">
+  <meta name="keywords" content="Python, AI Engineering, Edge AI, ONNX, Quantization, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/unlocking-edge-ai-performance-quantization-onnx-python.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments | Saif Modan">
+  <meta property="og:description" content="Boost Python AI model performance on edge devices. Learn quantization techniques and leverage ONNX Runtime for faster, memory-efficient inference in resource-constrained environments.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/unlocking-edge-ai-performance-quantization-onnx-python.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/unlocking-edge-ai-performance-quantization-onnx-python-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments">
+  <meta property="article:published_time" content="2026-09-10">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments | Saif Modan">
+  <meta name="twitter:description" content="Boost Python AI model performance on edge devices. Learn quantization techniques and leverage ONNX Runtime for faster, memory-efficient inference in resource-constrained environments.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/unlocking-edge-ai-performance-quantization-onnx-python-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments",
+  "description": "Boost Python AI model performance on edge devices. Learn quantization techniques and leverage ONNX Runtime for faster, memory-efficient inference in resource-constrained environments.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/unlocking-edge-ai-performance-quantization-onnx-python-cover.png"
+  ],
+  "datePublished": "2026-09-10",
+  "dateModified": "2026-09-10",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/unlocking-edge-ai-performance-quantization-onnx-python.html"
+  },
+  "keywords": "Python, AI Engineering, Edge AI, ONNX, Quantization"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">AI Engineering</span><span class="blog-tag-pill">Edge AI</span><span class="blog-tag-pill">ONNX</span><span class="blog-tag-pill">Quantization</span>
+          </div>
+          <h1 class="blog-article-title">Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-10</span>
+              <span>•</span>
+              <span>10 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/unlocking-edge-ai-performance-quantization-onnx-python-cover.png" alt="Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <p>The proliferation of Artificial Intelligence models across various domains has led to an increasing demand for deploying these intelligent systems beyond the confines of powerful cloud servers. From smart cameras performing real-time object detection to industrial IoT sensors predicting machinery failures, the "edge" has become a critical frontier for AI. However, this shift introduces a formidable challenge: how do we run complex, resource-intensive deep learning models on devices with severely limited computational power, memory, and energy budgets? Traditional cloud-trained models, often comprising millions of parameters and requiring significant floating-point operations, are simply too large and slow for effective edge deployment.</p>
+<p>This is where model optimization techniques become indispensable. As Saif Modan, an AI Developer and Python Engineer, I've seen firsthand the transformative power of efficiently deploying AI where the data is generated. In this post, we'll dive deep into two pivotal techniques for achieving high-performance AI on the edge: <strong>model quantization</strong> and leveraging the <strong>ONNX Runtime</strong> for Python applications. Together, they offer a robust strategy to shrink model footprint, accelerate inference, and unlock the full potential of AI in resource-constrained environments.</p>
+<h2>The Edge AI Imperative: Why Optimization Matters</h2>
+<p>Edge AI isn't just a buzzword; it's a strategic necessity driven by several factors:</p>
+<ul>
+<li><strong>Low Latency:</strong> Real-time applications (e.g., autonomous vehicles, factory automation) cannot afford the round-trip latency to a cloud server. Processing data locally ensures immediate responses.</li>
+<li><strong>Privacy and Security:</strong> Sensitive data (e.g., medical images, personal video feeds) can be processed on-device, minimizing the need to transmit it to the cloud and reducing privacy risks.</li>
+<li><strong>Bandwidth Limitations:</strong> In remote or disconnected environments, continuous data upload to the cloud is impractical or impossible. Edge processing reduces bandwidth consumption.</li>
+<li><strong>Cost Efficiency:</strong> Reducing reliance on cloud compute for inference can significantly lower operational costs in large-scale deployments.</li>
+<li><strong>Energy Constraints:</strong> Many edge devices are battery-powered, making energy efficiency a prime concern. Optimized models require less power.</li>
+</ul>
+<p>Meeting these demands requires a paradigm shift from simply training large, accurate models to also considering their operational efficiency at inference time.</p>
+<h2>Understanding Model Quantization: Shrinking Models, Boosting Speed</h2>
+<p>At its core, <strong>model quantization</strong> is a technique to reduce the precision of the numbers used to represent a neural network's weights and activations. Most deep learning models are trained using 32-bit floating-point numbers (FP32). Quantization typically converts these to lower-precision formats, most commonly 8-bit integers (INT8).</p>
+<h3>How Quantization Works and Its Benefits</h3>
+<p>Imagine representing a number like <code>3.14159</code> using a full sentence versus just "3". Quantization does something similar but in a structured way. For example, converting FP32 to INT8 involves mapping a range of floating-point values to a smaller range of integer values. This mapping typically includes a <code>scale</code> and a <code>zero_point</code>.</p>
+<p><strong>Benefits of Quantization:</strong></p>
+<ul>
+<li><strong>Reduced Model Size:</strong> An INT8 model is roughly 4x smaller than its FP32 counterpart, significantly easing storage and transmission burdens.</li>
+<li><strong>Faster Inference:</strong> Integer arithmetic is generally faster and more energy-efficient than floating-point arithmetic on most hardware, leading to substantial speedups (often 2-4x or more).</li>
+<li><strong>Lower Memory Bandwidth:</strong> Smaller models require less data to be moved between memory and processing units, improving overall system throughput.</li>
+</ul>
+<h3>Types of Quantization</h3>
+<ol>
+<li><strong>Post-Training Quantization (PTQ):</strong> This is applied <em>after</em> a model has been fully trained.<ul>
+<li><strong>Dynamic Quantization:</strong> Weights are quantized offline, but activations are quantized dynamically at inference time based on their observed range. Simpler to implement but offers less performance gain than static.</li>
+<li><strong>Static Quantization:</strong> Both weights and activations are quantized offline. This requires a small, representative dataset (a "calibration set") to determine the optimal quantization parameters (scale and zero point) for activations. It offers the best performance but can be more complex and sensitive to the calibration data.</li>
+</ul>
+</li>
+<li><strong>Quantization-Aware Training (QAT):</strong> The model is trained with simulated quantization effects, often from the beginning or fine-tuned after initial training. This typically yields the highest accuracy for a given quantization level, as the model "learns" to be robust to the precision loss. However, it requires modifying the training pipeline.</li>
+</ol>
+<p>For many edge deployment scenarios, especially when starting, PTQ (specifically static quantization) strikes a good balance between ease of implementation and significant performance gains.</p>
+<h2>Introducing ONNX and ONNX Runtime: The Universal Accelerator</h2>
+<p>While quantization handles the model's numerical precision, we also need an efficient, hardware-agnostic inference engine. This is where <strong>ONNX (Open Neural Network Exchange)</strong> and <strong>ONNX Runtime</strong> come into play.</p>
+<h3>What is ONNX?</h3>
+<p>ONNX is an open standard format for representing machine learning models. It allows developers to interchange models between different deep learning frameworks (e.g., PyTorch, TensorFlow, Keras) and deploy them using a common runtime. Think of it as a universal intermediate representation for neural networks.</p>
+<h3>Why ONNX Runtime?</h3>
+<p><strong>ONNX Runtime (ORT)</strong> is a high-performance inference engine for ONNX models. It's designed for maximum performance and compatibility across various hardware platforms (CPUs, GPUs, specialized AI accelerators like NVIDIA Jetson, Intel OpenVINO, ARM NEON). ORT achieves this by:</p>
+<ul>
+<li><strong>Optimized Graph Execution:</strong> It performs graph optimizations (e.g., node fusion, constant folding) to reduce computation and memory overhead.</li>
+<li><strong>Hardware Accelerators:</strong> It can leverage various execution providers (EPs) to offload computations to specialized hardware, automatically selecting the most efficient path.</li>
+<li><strong>Quantization Support:</strong> ORT natively supports running quantized ONNX models, taking full advantage of the INT8 operations.</li>
+</ul>
+<p>Using ONNX Runtime in Python allows us to load and execute models with minimal overhead, benefiting from its underlying C++ optimized core.</p>
+<h2>Practical Implementation: Quantizing and Inferencing a Model in Python</h2>
+<p>Let's walk through a practical example of taking a pre-trained PyTorch model, exporting it to ONNX, quantizing it, and performing inference using ONNX Runtime.</p>
+<h3>Step 1: Exporting a PyTorch Model to ONNX</h3>
+<p>First, ensure you have PyTorch, torchvision, and onnx installed.</p>
+<pre><code class="language-python">import torch
+import torchvision.models
+import onnx
+
+# 1. Load a pre-trained PyTorch model (e.g., ResNet18)
+model = torchvision.models.resnet18(pretrained=True)
+model.eval() # Set the model to evaluation mode
+
+# Create a dummy input tensor for tracing
+# ResNet18 expects 3-channel 224x224 images
+dummy_input = torch.randn(1, 3, 224, 224)
+
+# Define input/output names for the ONNX graph
+input_names = [&quot;input&quot;]
+output_names = [&quot;output&quot;]
+
+# Export the model
+onnx_path = &quot;resnet18.onnx&quot;
+torch.onnx.export(model,
+                  dummy_input,
+                  onnx_path,
+                  verbose=False,
+                  input_names=input_names,
+                  output_names=output_names,
+                  opset_version=11) # Opset version compatible with ONNX Runtime
+print(f&quot;Model exported to {onnx_path}&quot;)
+
+# Verify the ONNX model (optional)
+model_onnx = onnx.load(onnx_path)
+onnx.checker.check_model(model_onnx)
+print(&quot;ONNX model checked successfully.&quot;)
+</code></pre>
+<h3>Step 2: Applying Post-Training Static Quantization with ONNX Runtime</h3>
+<p>Now, we'll use the <code>onnxruntime.quantization</code> module to quantize our <code>resnet18.onnx</code> model. This requires a calibration dataset. For simplicity, we'll generate some dummy data, but in a real scenario, this would be a small, representative subset of your training data.</p>
+<pre><code class="language-python">from onnxruntime.quantization import quantize_static, CalibrationDataReader, QuantFormat, QuantType
+import numpy as np
+import os
+
+# Define a CalibrationDataReader
+# This class provides batches of input data to the quantizer
+class ResNetCalibrationDataReader(CalibrationDataReader):
+    def __init__(self, model_path: str, num_samples: int = 100):
+        self.enum_data_ = []
+        # Generate dummy input data for calibration
+        for _ in range(num_samples):
+            # Input shape should match the model's expected input
+            self.enum_data_.append({'input': np.random.rand(1, 3, 224, 224).astype(np.float32)})
+        self.iterator = iter(self.enum_data_)
+
+    def get_next(self):
+        return next(self.iterator, None)
+
+# Path to the original ONNX model
+model_path = &quot;resnet18.onnx&quot;
+quantized_model_path = &quot;resnet18_quantized.onnx&quot;
+
+# Create a calibration data reader instance
+calibration_data_reader = ResNetCalibrationDataReader(model_path, num_samples=100)
+
+# Perform static quantization
+print(&quot;Starting static quantization...&quot;)
+quantize_static(
+    model_input=model_path,
+    model_output=quantized_model_path,
+    calibration_data_reader=calibration_data_reader,
+    quant_format=QuantFormat.QDQ, # QDQ format for better accuracy with certain hardware
+    per_channel=False, # True for per-channel quantization, often better but larger
+    weight_type=QuantType.QInt8 # Quantize weights to INT8
+)
+print(f&quot;Quantized model saved to {quantized_model_path}&quot;)
+
+# Check file sizes
+original_size = os.path.getsize(model_path) / (1024 * 1024)
+quantized_size = os.path.getsize(quantized_model_path) / (1024 * 1024)
+print(f&quot;Original model size: {original_size:.2f} MB&quot;)
+print(f&quot;Quantized model size: {quantized_size:.2f} MB&quot;)
+</code></pre>
+<p>You should observe a significant reduction in file size (e.g., from ~45MB to ~11MB for ResNet18).</p>
+<h3>Step 3: Inference with ONNX Runtime</h3>
+<p>Finally, let's load both the original and quantized models and compare their inference times.</p>
+<pre><code class="language-python">import onnxruntime as ort
+import time
+
+# Create ONNX Runtime sessions
+session_options = ort.SessionOptions()
+# Optional: Configure the number of threads for inference
+session_options.intra_op_num_threads = 1 # For CPU, often 1 thread is best for latency
+session_options.inter_op_num_threads = 1 # For CPU, often 1 thread is best for latency
+
+# Original model session
+original_session = ort.InferenceSession(model_path, session_options=session_options, providers=['CPUExecutionProvider'])
+original_input_name = original_session.get_inputs()[0].name
+original_output_name = original_session.get_outputs()[0].name
+
+# Quantized model session
+quantized_session = ort.InferenceSession(quantized_model_path, session_options=session_options, providers=['CPUExecutionProvider'])
+quantized_input_name = quantized_session.get_inputs()[0].name
+quantized_output_name = quantized_session.get_outputs()[0].name
+
+# Create a dummy input image for inference
+input_data = np.random.rand(1, 3, 224, 224).astype(np.float32)
+
+num_inferences = 100
+print(f&quot;\nBenchmarking inference speed over {num_inferences} runs...&quot;)
+
+# Benchmark original model
+start_time = time.perf_counter()
+for _ in range(num_inferences):
+    original_outputs = original_session.run([original_output_name], {original_input_name: input_data})
+end_time = time.perf_counter()
+original_avg_latency = (end_time - start_time) / num_inferences * 1000
+print(f&quot;Original model average latency: {original_avg_latency:.2f} ms&quot;)
+
+# Benchmark quantized model
+start_time = time.perf_counter()
+for _ in range(num_inferences):
+    quantized_outputs = quantized_session.run([quantized_output_name], {quantized_input_name: input_data})
+end_time = time.perf_counter()
+quantized_avg_latency = (end_time - start_time) / num_inferences * 1000
+print(f&quot;Quantized model average latency: {quantized_avg_latency:.2f} ms&quot;)
+
+# Optional: Verify outputs (though quantized output will be slightly different)
+# print(f&quot;Original output shape: {original_outputs[0].shape}&quot;)
+# print(f&quot;Quantized output shape: {quantized_outputs[0].shape}&quot;)
+</code></pre>
+<p>You should observe a noticeable reduction in average inference latency for the quantized model, showcasing the practical benefits. The exact speedup depends on your hardware and model.</p>
+<h2>Architectural Considerations and Best Practices</h2>
+<p>Deploying quantized models on the edge involves more than just running the code:</p>
+<ul>
+<li><strong>Model Selection:</strong> Start with models designed to be efficient (e.g., MobileNet, EfficientNet variants, YOLOv5/v8-N for object detection) rather than trying to heavily quantize a massive model like a full ResNet152.</li>
+<li><strong>Calibration Data:</strong> For static quantization, the quality and representativeness of your calibration dataset are crucial. A poorly chosen set can lead to significant accuracy drops.</li>
+<li><strong>Accuracy Validation:</strong> Always rigorously evaluate the accuracy of your quantized model against your target metrics. Quantization is a trade-off, and you need to find the sweet spot.</li>
+<li><strong>Hardware Acceleration:</strong> Leverage specific ONNX Runtime execution providers for your target hardware (e.g., <code>CUDAExecutionProvider</code> for NVIDIA Jetson, <code>OpenVINOExecutionProvider</code> for Intel, <code>NNAPIExtension</code> for Android). This often requires compiling ONNX Runtime with specific flags or installing specific packages.</li>
+<li><strong>On-Device Preprocessing:</strong> Ensure that the input preprocessing logic (resizing, normalization) on your edge device exactly matches what the model was trained on and calibrated with. Discrepancies can lead to poor performance.</li>
+<li><strong>Deployment Strategy:</strong> Depending on the edge device, consider using containerization (Docker, Podman) for consistent environments, or direct deployment for highly constrained devices.</li>
+<li><strong>Monitoring:</strong> Implement monitoring for both performance (latency, memory usage) and accuracy (if possible, by sending a sample of predictions back to the cloud for validation) in your production edge deployments.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>The journey of bringing sophisticated AI capabilities to the edge is paved with challenges, but also immense opportunities. Model quantization, coupled with the versatile ONNX format and the high-performance ONNX Runtime, provides a powerful toolkit for Python developers to overcome the limitations of resource-constrained devices.</p>
+<p>By thoughtfully applying these techniques, we can significantly reduce model size, accelerate inference speeds, and enable a new generation of intelligent applications that operate closer to the data source. This not only enhances user experience with real-time responsiveness and improved privacy but also unlocks new possibilities for innovation in fields ranging from smart manufacturing to sustainable agriculture. As edge computing continues its rapid expansion, mastering these optimization strategies will be paramount for any AI engineer looking to build impactful and efficient solutions.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
