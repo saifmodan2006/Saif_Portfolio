@@ -1,5 +1,20 @@
 [
   {
+    "slug": "architecting-high-performance-data-interchange-arrow-parquet",
+    "title": "Architecting High-Performance Data Interchange: Leveraging Apache Arrow and Parquet in Python Microservices",
+    "metaDescription": "Master high-performance data interchange in Python microservices using Apache Arrow and Parquet. Optimize serialization, reduce latency, and boost analytical workflows.",
+    "tags": [
+      "Python",
+      "Data Engineering",
+      "Performance Optimization",
+      "Apache Arrow",
+      "Microservices"
+    ],
+    "date": "2026-09-11",
+    "readingTime": "8 min read",
+    "image": "assets/blog/architecting-high-performance-data-interchange-arrow-parquet-cover.png"
+  },
+  {
     "slug": "unlocking-edge-ai-performance-quantization-onnx-python",
     "title": "Unlocking Edge AI Performance: Quantization and ONNX Runtime for Python Deployments",
     "metaDescription": "Boost Python AI model performance on edge devices. Learn quantization techniques and leverage ONNX Runtime for faster, memory-efficient inference in resource-constrained environments.",
