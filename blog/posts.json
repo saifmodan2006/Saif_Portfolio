@@ -1,5 +1,20 @@
 [
   {
+    "slug": "high-performance-gnn-inference-pytorch-geometric-fastapi",
+    "title": "Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI",
+    "metaDescription": "Learn to build and deploy high-performance Graph Neural Network (GNN) inference services using PyTorch Geometric and FastAPI, handling complex graph data efficiently.",
+    "tags": [
+      "Python",
+      "GNN",
+      "PyTorch Geometric",
+      "FastAPI",
+      "AI Engineering"
+    ],
+    "date": "2026-09-12",
+    "readingTime": "9 min read",
+    "image": "assets/blog/high-performance-gnn-inference-pytorch-geometric-fastapi-cover.png"
+  },
+  {
     "slug": "architecting-high-performance-data-interchange-arrow-parquet",
     "title": "Architecting High-Performance Data Interchange: Leveraging Apache Arrow and Parquet in Python Microservices",
     "metaDescription": "Master high-performance data interchange in Python microservices using Apache Arrow and Parquet. Optimize serialization, reduce latency, and boost analytical workflows.",

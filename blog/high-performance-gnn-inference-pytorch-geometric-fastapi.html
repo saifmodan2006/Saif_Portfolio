@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI | Saif Modan</title>
+  <meta name="description" content="Learn to build and deploy high-performance Graph Neural Network (GNN) inference services using PyTorch Geometric and FastAPI, handling complex graph data efficiently.">
+  <meta name="keywords" content="Python, GNN, PyTorch Geometric, FastAPI, AI Engineering, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/high-performance-gnn-inference-pytorch-geometric-fastapi.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI | Saif Modan">
+  <meta property="og:description" content="Learn to build and deploy high-performance Graph Neural Network (GNN) inference services using PyTorch Geometric and FastAPI, handling complex graph data efficiently.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/high-performance-gnn-inference-pytorch-geometric-fastapi.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-performance-gnn-inference-pytorch-geometric-fastapi-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI">
+  <meta property="article:published_time" content="2026-09-12">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI | Saif Modan">
+  <meta name="twitter:description" content="Learn to build and deploy high-performance Graph Neural Network (GNN) inference services using PyTorch Geometric and FastAPI, handling complex graph data efficiently.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-performance-gnn-inference-pytorch-geometric-fastapi-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI",
+  "description": "Learn to build and deploy high-performance Graph Neural Network (GNN) inference services using PyTorch Geometric and FastAPI, handling complex graph data efficiently.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-performance-gnn-inference-pytorch-geometric-fastapi-cover.png"
+  ],
+  "datePublished": "2026-09-12",
+  "dateModified": "2026-09-12",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/high-performance-gnn-inference-pytorch-geometric-fastapi.html"
+  },
+  "keywords": "Python, GNN, PyTorch Geometric, FastAPI, AI Engineering"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">GNN</span><span class="blog-tag-pill">PyTorch Geometric</span><span class="blog-tag-pill">FastAPI</span><span class="blog-tag-pill">AI Engineering</span>
+          </div>
+          <h1 class="blog-article-title">Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-12</span>
+              <span>•</span>
+              <span>9 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/high-performance-gnn-inference-pytorch-geometric-fastapi-cover.png" alt="Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <h1>Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI</h1>
+<p>Graph Neural Networks (GNNs) have emerged as a powerful paradigm for modeling complex relationships within data, revolutionizing fields from social network analysis and fraud detection to drug discovery and recommendation systems. Their ability to learn from interconnected data structures provides insights that traditional neural networks often miss. However, transitioning a GNN model from experimental success to a high-performance, production-ready inference service presents a unique set of engineering challenges. This post, from my perspective as an AI Developer and Python Engineer, will dive deep into building such a system using PyTorch Geometric (PyG) for model implementation and FastAPI for serving, focusing on practical architectural patterns and optimization strategies.</p>
+<h2>The Unique Challenges of GNN Inference in Production</h2>
+<p>Unlike image or text models that process independent data points, GNNs operate on graphs, where each node's representation is influenced by its neighbors and the structure of the graph itself. This inherent interdependence introduces several complexities for real-time inference:</p>
+<ol>
+<li><strong>Graph Data Management</strong>: How do you store, retrieve, and update potentially massive graph structures efficiently? Loading the entire graph for every inference request is often impractical.</li>
+<li><strong>Subgraph Sampling</strong>: Most GNNs perform message passing over a node's local neighborhood. For inference on a specific node, only a relevant subgraph (the 'ego-graph') is needed, but extracting this efficiently on-the-fly can be costly.</li>
+<li><strong>Feature Retrieval</strong>: Node and edge features must be retrieved alongside the graph structure, often from different data sources.</li>
+<li><strong>Dynamic Graphs</strong>: Real-world graphs are constantly evolving. Keeping the deployed model's underlying graph representation up-to-date without sacrificing performance is critical.</li>
+<li><strong>Memory Footprint</strong>: Large graphs, even subgraphs, can consume significant memory, especially when combined with model parameters.</li>
+<li><strong>Batching</strong>: Traditional batching for GNNs is more complex than for independent samples. Graphs within a batch need to be combined carefully (e.g., using a <code>torch_geometric.data.Batch</code> object) to allow parallel processing.</li>
+</ol>
+<p>Addressing these challenges requires a thoughtful architectural design and leveraging the right tools.</p>
+<h2>Core Technologies for a Robust GNN Service</h2>
+<p>Our chosen stack combines the power of specialized GNN libraries with a modern asynchronous web framework:</p>
+<ul>
+<li><strong>PyTorch Geometric (PyG)</strong>: A highly optimized library built on PyTorch, providing a rich collection of GNN layers, datasets, and utilities. Its efficient data structures and CUDA support are invaluable for performance.</li>
+<li><strong>FastAPI</strong>: A high-performance, easy-to-use web framework for building APIs with Python 3.7+ based on standard Python type hints. Its asynchronous capabilities (<code>async</code>/<code>await</code>) are crucial for handling I/O-bound graph operations without blocking the event loop.</li>
+</ul>
+<h2>Architectural Blueprint for High-Performance GNN Deployment</h2>
+<p>Consider an architecture where a pre-trained GNN model is deployed to provide real-time predictions (e.g., node classification, link prediction, or graph classification). The core components would be:</p>
+<ol>
+<li><strong>Graph Storage Layer</strong>: This could be an in-memory representation for smaller, static graphs, or a dedicated graph database (e.g., Neo4j, DGL's graph store, or even a highly optimized key-value store like Redis/RocksDB for features) for larger, dynamic graphs. The key is fast retrieval of graph structure and features.</li>
+<li><strong>Feature Store</strong>: A separate system (e.g., Redis, Cassandra, or even Parquet files on S3 for batch features) to store and serve node/edge features, optimized for low-latency lookups.</li>
+<li><strong>FastAPI Inference Service</strong>: The heart of our deployment, responsible for receiving requests, coordinating graph data retrieval, performing inference, and returning results.</li>
+</ol>
+<h3>Inference Workflow:</h3>
+<ol>
+<li><strong>Request Reception</strong>: A client sends a request (e.g., <code>POST /predict/node/{node_id}</code>) to the FastAPI service.</li>
+<li><strong>Graph Data Retrieval</strong>: The service identifies the target node/graph and asynchronously fetches the necessary subgraph structure and its associated features from the Graph Storage and Feature Store.</li>
+<li><strong>Subgraph Construction</strong>: The retrieved data is converted into a <code>torch_geometric.data.Data</code> object or <code>Batch</code> object, suitable for the GNN model.</li>
+<li><strong>Model Inference</strong>: The prepared graph data is passed through the loaded PyG model.</li>
+<li><strong>Post-processing</strong>: Model outputs are processed (e.g., probability to class label conversion).</li>
+<li><strong>Response</strong>: The prediction is returned to the client.</li>
+</ol>
+<h2>Implementing the FastAPI Service with PyTorch Geometric</h2>
+<p>Let's sketch out a basic FastAPI application structure.</p>
+<p>First, ensure you have the necessary libraries installed:</p>
+<pre><code class="language-bash">pip install fastapi uvicorn 'torch&gt;=2.0' 'torch_geometric'
+</code></pre>
+<pre><code class="language-python">import torch
+from torch_geometric.data import Data
+from torch_geometric.nn import GCNConv
+import torch.nn.functional as F
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import uvicorn
+import numpy as np
+
+# --- 1. Define a simple GNN Model (for demonstration) ---
+class GNNModel(torch.nn.Module):
+    def __init__(self, num_node_features, num_classes):
+        super().__init__()
+        self.conv1 = GCNConv(num_node_features, 16)
+        self.conv2 = GCNConv(16, num_classes)
+
+    def forward(self, data):
+        x, edge_index = data.x, data.edge_index
+        x = self.conv1(x, edge_index)
+        x = F.relu(x)
+        x = F.dropout(x, training=self.training)
+        x = self.conv2(x, edge_index)
+        return F.log_softmax(x, dim=1)
+
+# --- 2. Load Pre-trained Model and Graph Data ---
+# In a real scenario, this would load a model from disk and
+# potentially a large graph from a database or a pre-processed file.
+
+# Dummy graph data for demonstration
+# A simple graph with 3 nodes, 2 features per node, and 2 classes
+# Node features (x): 3 nodes, 2 features each
+n_nodes = 3
+n_features = 2
+n_classes = 2
+
+dummy_x = torch.randn(n_nodes, n_features)
+# Edge index (edge_index): Connections (e.g., node 0 connects to 1, 1 to 2, 2 to 0)
+dummy_edge_index = torch.tensor([
+    [0, 1, 2],
+    [1, 2, 0]
+], dtype=torch.long)
+
+# Create a PyG Data object
+# In a real system, you'd fetch a subgraph for a given node_id
+global_graph_data = Data(x=dummy_x, edge_index=dummy_edge_index)
+
+# Initialize and load a dummy pre-trained model
+model = GNNModel(num_node_features=n_features, num_classes=n_classes)
+# model.load_state_dict(torch.load(&quot;path/to/your/model.pt&quot;)) # Uncomment in production
+model.eval() # Set model to evaluation mode
+
+# --- 3. FastAPI Application ---
+app = FastAPI(
+    title=&quot;GNN Inference Service&quot;,
+    description=&quot;A high-performance service for GNN predictions using PyTorch Geometric.&quot;
+)
+
+class NodePredictionRequest(BaseModel):
+    node_id: int
+
+class PredictionResponse(BaseModel):
+    node_id: int
+    predicted_class: int
+    probabilities: list[float]
+
+@app.post(&quot;/predict/node&quot;, response_model=PredictionResponse)
+async def predict_node_class(request: NodePredictionRequest):
+    node_id = request.node_id
+
+    if node_id &gt;= n_nodes or node_id &lt; 0:
+        raise HTTPException(status_code=404, detail=f&quot;Node {node_id} not found in graph.&quot;)
+
+    # In a real application, you would perform subgraph sampling here.
+    # For simplicity, we'll use the global_graph_data and assume
+    # the model can handle direct inference on a specific node within it.
+    # A more robust approach would involve creating a new Data object
+    # representing the sampled ego-graph around `node_id`.
+
+    # Move data to the appropriate device (CPU/GPU)
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model.to(device)
+    graph_on_device = global_graph_data.to(device)
+
+    with torch.no_grad():
+        output = model(graph_on_device)
+        probabilities = F.softmax(output[node_id], dim=0)
+        predicted_class = torch.argmax(probabilities).item()
+
+    return PredictionResponse(
+        node_id=node_id,
+        predicted_class=predicted_class,
+        probabilities=probabilities.tolist()
+    )
+
+# To run the app:
+# uvicorn your_module_name:app --host 0.0.0.0 --port 8000
+</code></pre>
+<p>This basic setup demonstrates the integration. The <code>global_graph_data</code> would typically be a dynamically retrieved and sampled subgraph. For production, the <code>model.to(device)</code> and <code>graph_on_device = global_graph_data.to(device)</code> should ideally happen once on startup or be managed more efficiently for batching.</p>
+<h2>Optimizing GNN Inference Performance</h2>
+<p>Achieving low-latency, high-throughput GNN inference requires several optimizations:</p>
+<ol>
+<li><strong>Efficient Subgraph Sampling</strong>: This is paramount. Instead of loading the entire graph, implement efficient algorithms (e.g., neighbor sampling, k-hop ego-graph extraction) to retrieve only the necessary nodes and edges for a given inference request. Libraries like DGL or PyG's <code>NeighborSampler</code> can assist with this. Pre-computing and caching common subgraphs can also dramatically reduce latency.</li>
+<li><strong>Batching Strategies</strong>: For high throughput, batch multiple inference requests. GNN batching involves combining several <code>Data</code> objects into a single <code>Batch</code> object. PyG handles this gracefully, allowing parallel processing of independent subgraphs within a single forward pass.<br />
+<code>python
+    from torch_geometric.data import Batch
+    # ... inside your prediction endpoint ...
+    # sampled_subgraphs = [get_subgraph_for_node(node_id) for node_id in batch_of_node_ids]
+    # batch = Batch.from_data_list(sampled_subgraphs)
+    # output = model(batch)</code></li>
+<li><strong>Hardware Acceleration</strong>: Leverage GPUs if available. PyTorch Geometric is built to utilize CUDA, offering significant speedups for larger models and graphs. Ensure your model and graph data are moved to the GPU (<code>.to('cuda')</code>).</li>
+<li><strong><code>torch.compile</code></strong>: For PyTorch 2.0+, <code>torch.compile(model)</code> can provide substantial speedups by JIT compiling your model into optimized kernels. This is a relatively low-effort, high-impact optimization.</li>
+<li><strong>Graph Data Structure Optimization</strong>: When managing large graphs, consider sparse matrix representations for adjacency lists (e.g., <code>torch.sparse_coo_tensor</code>) to save memory and improve computation efficiency, especially for GNN layers that support sparse operations.</li>
+<li><strong>Feature Caching</strong>: If node/edge features are static or change infrequently, cache them aggressively in memory or a fast in-memory store like Redis. This avoids repeated database lookups.</li>
+<li><strong>Asynchronous I/O</strong>: FastAPI's <code>async</code>/<code>await</code> pattern is critical. Ensure that graph and feature retrieval operations are truly asynchronous (e.g., using <code>asyncpg</code> for PostgreSQL, <code>aioredis</code> for Redis) to prevent blocking the event loop and maintain high concurrency.</li>
+</ol>
+<h2>Practical Considerations and Trade-offs</h2>
+<ul>
+<li><strong>Memory vs. Latency</strong>: Storing larger portions of the graph in memory can reduce retrieval latency but increases memory footprint. For very large graphs, external graph databases become necessary, introducing network latency.</li>
+<li><strong>Static vs. Dynamic Graphs</strong>: If your graph is mostly static, pre-processing and storing it in an optimized format (e.g., adjacency lists in NumPy arrays or PyTorch tensors) is efficient. For dynamic graphs, a dedicated graph database with real-time updates is essential, but it adds operational complexity.</li>
+<li><strong>Scalability</strong>: FastAPI services can be scaled horizontally behind a load balancer. For the GNN model itself, if the graph is too large to fit in memory on a single machine, distributed graph processing frameworks (like DGL's distributed graph engine) might be necessary, adding significant complexity to the deployment.</li>
+<li><strong>Monitoring</strong>: Implement robust monitoring for your GNN service, tracking request latency, error rates, GPU utilization, and memory consumption. This helps identify bottlenecks and ensure stable operation.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>Deploying high-performance GNN inference services is a sophisticated task that demands careful consideration of graph data management, model optimization, and API design. By leveraging the strengths of PyTorch Geometric for efficient GNN computation and FastAPI for building a concurrent, low-latency API, we can architect robust and scalable solutions. The journey involves navigating unique challenges, from subgraph sampling to batching strategies, but the power of GNNs in unlocking insights from interconnected data makes the effort immensely rewarding. As GNNs continue to evolve, so too will the engineering practices required to bring them to the forefront of real-world AI applications.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
