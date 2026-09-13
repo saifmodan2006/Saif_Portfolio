@@ -1,5 +1,20 @@
 [
   {
+    "slug": "supercharging-data-integrity-pydantic-v2-async-python",
+    "title": "Supercharging Data Integrity: High-Throughput Validation and Transformation with Pydantic V2 in Async Python Services",
+    "metaDescription": "Explore how Pydantic V2's Rust-powered core optimizes data validation and transformation in high-throughput async Python services. Boost API performance and data integrity.",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "Pydantic",
+      "Data Engineering",
+      "Performance Optimization"
+    ],
+    "date": "2026-09-13",
+    "readingTime": "9 min read",
+    "image": "assets/blog/supercharging-data-integrity-pydantic-v2-async-python-cover.png"
+  },
+  {
     "slug": "high-performance-gnn-inference-pytorch-geometric-fastapi",
     "title": "Architecting High-Performance Graph Neural Network Inference with PyTorch Geometric and FastAPI",
     "metaDescription": "Learn to build and deploy high-performance Graph Neural Network (GNN) inference services using PyTorch Geometric and FastAPI, handling complex graph data efficiently.",
