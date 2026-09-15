@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Real-time Complex Event Processing with Async Python and Redis Streams | Saif Modan</title>
+  <meta name="description" content="Master real-time complex event processing using Async Python and Redis Streams. Build high-throughput, low-latency data pipelines for instant insights and reactive systems.">
+  <meta name="keywords" content="Python, AsyncIO, Redis, Event-Driven, Real-time Analytics, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/real-time-complex-event-processing-async-python-redis-streams.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Real-time Complex Event Processing with Async Python and Redis Streams | Saif Modan">
+  <meta property="og:description" content="Master real-time complex event processing using Async Python and Redis Streams. Build high-throughput, low-latency data pipelines for instant insights and reactive systems.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/real-time-complex-event-processing-async-python-redis-streams.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/real-time-complex-event-processing-async-python-redis-streams-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Real-time Complex Event Processing with Async Python and Redis Streams">
+  <meta property="article:published_time" content="2026-09-15">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Real-time Complex Event Processing with Async Python and Redis Streams | Saif Modan">
+  <meta name="twitter:description" content="Master real-time complex event processing using Async Python and Redis Streams. Build high-throughput, low-latency data pipelines for instant insights and reactive systems.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/real-time-complex-event-processing-async-python-redis-streams-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Real-time Complex Event Processing with Async Python and Redis Streams",
+  "description": "Master real-time complex event processing using Async Python and Redis Streams. Build high-throughput, low-latency data pipelines for instant insights and reactive systems.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/real-time-complex-event-processing-async-python-redis-streams-cover.png"
+  ],
+  "datePublished": "2026-09-15",
+  "dateModified": "2026-09-15",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/real-time-complex-event-processing-async-python-redis-streams.html"
+  },
+  "keywords": "Python, AsyncIO, Redis, Event-Driven, Real-time Analytics"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">AsyncIO</span><span class="blog-tag-pill">Redis</span><span class="blog-tag-pill">Event-Driven</span><span class="blog-tag-pill">Real-time Analytics</span>
+          </div>
+          <h1 class="blog-article-title">Real-time Complex Event Processing with Async Python and Redis Streams</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-15</span>
+              <span>•</span>
+              <span>10 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/real-time-complex-event-processing-async-python-redis-streams-cover.png" alt="Real-time Complex Event Processing with Async Python and Redis Streams" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <p>The modern digital landscape demands instant reactions. From detecting fraudulent transactions in real-time to personalizing user experiences or monitoring critical IoT infrastructure, the ability to process and act upon streams of events <em>as they happen</em> is no longer a luxury but a necessity. Traditional batch processing, while effective for historical analysis, falls short when business logic dictates immediate response to evolving patterns in live data. This is where Complex Event Processing (CEP) shines, transforming raw data streams into actionable insights by identifying meaningful sequences, correlations, and anomalies across diverse event sources.</p>
+<p>In this post, we'll explore how to build robust, high-throughput, and low-latency CEP pipelines using the power of Async Python combined with Redis Streams. This synergy offers an agile and efficient approach to tackle real-time analytical challenges, allowing engineers to craft reactive systems that respond intelligently to the pulse of their data.</p>
+<h2>Understanding Complex Event Processing (CEP)</h2>
+<p>At its core, CEP involves analyzing multiple data streams to identify patterns, relationships, or conditions that indicate a "complex event." Unlike simple event processing, which reacts to individual events, CEP aggregates, filters, transforms, and correlates events over a period to discover higher-level insights.</p>
+<p>Consider scenarios like:<br />
+*   <strong>Fraud Detection</strong>: Three failed login attempts from different IPs within a minute, followed by a successful login from a new device.<br />
+*   <strong>IoT Monitoring</strong>: A temperature sensor exceeding a threshold, followed by a pressure drop, indicating a potential equipment failure.<br />
+*   <strong>Personalized Recommendations</strong>: A user viewing three items from a specific category, then adding one to their cart, signaling strong intent.</p>
+<p>These scenarios require stateful processing, where the system remembers past events and combines them with current ones to make decisions.</p>
+<h2>Why Async Python and Redis Streams for CEP?</h2>
+<h3>Async Python for Concurrency and Efficiency</h3>
+<p>Python's <code>asyncio</code> framework is perfectly suited for I/O-bound operations, which are prevalent in event processing. Instead of blocking while waiting for network requests (e.g., reading from Redis, writing to a database), <code>asyncio</code> allows your application to concurrently manage thousands of operations with a single thread. This translates to:<br />
+*   <strong>High Throughput</strong>: Efficiently process a large volume of incoming events.<br />
+*   <strong>Low Latency</strong>: Minimize delays by not blocking on I/O.<br />
+*   <strong>Resource Efficiency</strong>: Maximize CPU utilization by switching tasks rather than waiting idly.</p>
+<h3>Redis Streams for Reliable, Low-Latency Messaging</h3>
+<p>Redis Streams, introduced in Redis 5.0, provide an append-only log data structure that models an event stream. They offer several powerful features ideal for CEP:<br />
+*   <strong>Persistence</strong>: Events are stored reliably.<br />
+*   <strong>Consumer Groups</strong>: Enable multiple consumers to process a stream in parallel, distributing the workload and ensuring that each message is processed at least once by one consumer in the group. This is crucial for scaling and fault tolerance.<br />
+*   <strong>Message Acknowledgment (XACK)</strong>: Consumers explicitly acknowledge processed messages, allowing Redis to track pending messages and re-deliver them if a consumer fails.<br />
+*   <strong>Range Queries (XRANGE)</strong>: Efficiently retrieve a range of messages by ID.<br />
+*   <strong>Blocking Reads (XREAD / XREADGROUP)</strong>: Consumers can block until new messages arrive, reducing polling overhead.</p>
+<p>The combination of Async Python's concurrent capabilities and Redis Streams' robust messaging model creates a powerful foundation for real-time CEP.</p>
+<h2>Architectural Overview</h2>
+<p>A typical CEP pipeline with Async Python and Redis Streams involves:</p>
+<ol>
+<li><strong>Event Producers</strong>: Applications or services that generate raw events (e.g., user actions, sensor readings, transaction data) and publish them to a Redis Stream using <code>XADD</code>.</li>
+<li><strong>Redis Stream</strong>: Acts as the central message broker, storing events reliably and enabling fan-out to multiple consumers.</li>
+<li><strong>Async Python CEP Processor</strong>: The core component. It consumes events from the Redis Stream using <code>XREADGROUP</code>, applies business logic to detect complex patterns, maintains necessary state, and then potentially publishes new derived events or triggers actions.</li>
+<li><strong>Output/Action</strong>: Derived complex events can be published to another Redis Stream, sent to a database, trigger alerts, or invoke other microservices.</li>
+</ol>
+<pre><code class="language-mermaid">graph TD
+    A[Event Producer 1] --&gt; B(Redis Stream: raw_events)
+    C[Event Producer 2] --&gt; B
+    B --&gt; D{Async Python CEP Processor}
+    D --&gt; E[Redis Stream: complex_events]
+    D --&gt; F[Database / Alerting System]
+</code></pre>
+<h3>Implementing a CEP Processor</h3>
+<p>Let's walk through a practical example: detecting three failed login attempts from the same user within a 60-second window.</p>
+<p>First, ensure you have <code>redis-py</code> installed: <code>pip install redis</code>.</p>
+<h4>1. Event Producer Example</h4>
+<p>This producer simulates users attempting to log in, some failing, some succeeding.</p>
+<pre><code class="language-python">import asyncio
+import redis.asyncio as redis
+import json
+import time
+import random
+
+async def produce_login_events():
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    stream_name = &quot;login_attempts&quot;
+
+    users = [&quot;alice&quot;, &quot;bob&quot;, &quot;charlie&quot;, &quot;diana&quot;]
+    results = [&quot;success&quot;, &quot;failure&quot;]
+    ip_addresses = [f&quot;192.168.1.{i}&quot; for i in range(1, 10)]
+
+    print(&quot;Starting event producer...&quot;)
+    while True:
+        user = random.choice(users)
+        result = random.choices(results, weights=[0.2, 0.8], k=1)[0] # More failures for demonstration
+        ip = random.choice(ip_addresses)
+        timestamp = int(time.time() * 1000) # Milliseconds
+
+        event = {
+            &quot;user&quot;: user,
+            &quot;result&quot;: result,
+            &quot;ip_address&quot;: ip,
+            &quot;timestamp&quot;: timestamp
+        }
+        await r.xadd(stream_name, {&quot;data&quot;: json.dumps(event)})
+        print(f&quot;Produced event: {event}&quot;)
+        await asyncio.sleep(random.uniform(0.1, 0.5)) # Simulate varying arrival times
+
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(produce_login_events())
+</code></pre>
+<h4>2. Async Python CEP Processor</h4>
+<p>Our processor will maintain a temporary state for each user, tracking their recent failed login attempts.</p>
+<pre><code class="language-python">import asyncio
+import redis.asyncio as redis
+import json
+from collections import deque
+import time
+
+STREAM_NAME = &quot;login_attempts&quot;
+CONSUMER_GROUP_NAME = &quot;login_processor_group&quot;
+CONSUMER_NAME = &quot;processor_instance_1&quot; # Unique name for this consumer instance
+WINDOW_SECONDS = 60
+FAILED_ATTEMPTS_THRESHOLD = 3
+
+# In-memory state for tracking failed attempts per user
+# user_states = {
+#     &quot;username&quot;: deque([(timestamp, ip_address), ...])
+# }
+user_states = {}
+
+async def process_event(event_id: str, event_data: dict, r: redis.Redis):
+    global user_states
+    try:
+        data_str = event_data.get('data')
+        if not data_str:
+            print(f&quot;Skipping event {event_id}: 'data' field missing.&quot;)
+            await r.xack(STREAM_NAME, CONSUMER_GROUP_NAME, event_id)
+            return
+
+        event = json.loads(data_str)
+        user = event.get(&quot;user&quot;)
+        result = event.get(&quot;result&quot;)
+        timestamp_ms = event.get(&quot;timestamp&quot;)
+        ip_address = event.get(&quot;ip_address&quot;)
+
+        if not all([user, result, timestamp_ms, ip_address]):
+            print(f&quot;Skipping event {event_id}: Malformed event data: {event}&quot;)
+            await r.xack(STREAM_NAME, CONSUMER_GROUP_NAME, event_id)
+            return
+
+        current_time_ms = int(time.time() * 1000)
+        window_start_ms = current_time_ms - (WINDOW_SECONDS * 1000)
+
+        if user not in user_states:
+            user_states[user] = deque()
+
+        # Add current event if it's a failure
+        if result == &quot;failure&quot;:
+            user_states[user].append((timestamp_ms, ip_address))
+            print(f&quot;[{CONSUMER_NAME}] User {user}: Failed login recorded.&quot;)
+
+        # Clean up old events outside the window
+        while user_states[user] and user_states[user][0][0] &lt; window_start_ms:
+            user_states[user].popleft()
+
+        # Check for complex event pattern
+        if len(user_states[user]) &gt;= FAILED_ATTEMPTS_THRESHOLD:
+            # For simplicity, we just count. For more advanced CEP, you might check distinct IPs, etc.
+            print(f&quot;!!! [{CONSUMER_NAME}] COMPLEX EVENT DETECTED for user '{user}': &quot;
+                  f&quot;{len(user_states[user])} failed attempts within {WINDOW_SECONDS} seconds. &quot;
+                  f&quot;Details: {list(user_states[user])}&quot;)
+            # Here, you would typically trigger an action:
+            #   - Publish a new 'fraud_alert' event to another Redis Stream
+            #   - Send an email/SMS alert
+            #   - Update a database
+            #   - Block the user account temporarily
+
+            # Clear state after detection to avoid repeated alerts for the same pattern
+            user_states[user].clear()
+
+        await r.xack(STREAM_NAME, CONSUMER_GROUP_NAME, event_id)
+
+    except json.JSONDecodeError as e:
+        print(f&quot;[{CONSUMER_NAME}] Error decoding JSON for event {event_id}: {e}&quot;)
+        await r.xack(STREAM_NAME, CONSUMER_GROUP_NAME, event_id) # Acknowledge even on error to prevent re-processing bad messages
+    except Exception as e:
+        print(f&quot;[{CONSUMER_NAME}] Unexpected error processing event {event_id}: {e}&quot;)
+        await r.xack(STREAM_NAME, CONSUMER_GROUP_NAME, event_id) # Acknowledge to prevent re-processing on unexpected errors
+
+
+async def consume_events():
+    r = redis.Redis(host='localhost', port=6379, db=0)
+
+    # Ensure the consumer group exists
+    try:
+        await r.xgroup_create(STREAM_NAME, CONSUMER_GROUP_NAME, id='0', mkstream=True)
+        print(f&quot;Created consumer group '{CONSUMER_GROUP_NAME}' for stream '{STREAM_NAME}'&quot;)
+    except Exception as e:
+        if &quot;BUSYGROUP&quot; not in str(e):
+            print(f&quot;Error creating consumer group: {e}&quot;)
+        else:
+            print(f&quot;Consumer group '{CONSUMER_GROUP_NAME}' already exists.&quot;)
+
+    print(f&quot;Starting consumer '{CONSUMER_NAME}' for group '{CONSUMER_GROUP_NAME}' on stream '{STREAM_NAME}'...&quot;)
+    while True:
+        try:
+            # Read new messages and pending messages ('&gt;' means new messages, '0' means pending)
+            # count=10 fetches up to 10 messages at a time for batch processing efficiency
+            response = await r.xreadgroup(
+                CONSUMER_GROUP_NAME,
+                CONSUMER_NAME,
+                {STREAM_NAME: '&gt;'}, # Read new messages
+                count=10,
+                block=1000 # Block for 1 second if no new messages
+            )
+
+            if response:
+                for stream_name, messages in response:
+                    for message_id, message_data in messages:
+                        event_id = message_id.decode()
+                        decoded_data = {k.decode(): v.decode() for k, v in message_data.items()}
+                        print(f&quot;[{CONSUMER_NAME}] Received event {event_id}: {decoded_data}&quot;)
+                        await process_event(event_id, decoded_data, r)
+            else:
+                # print(f&quot;[{CONSUMER_NAME}] No new messages, checking for pending messages...&quot;)
+                # Optionally, check for pending messages here or in a separate task
+                pass
+
+        except Exception as e:
+            print(f&quot;[{CONSUMER_NAME}] Consumer error: {e}&quot;)
+            await asyncio.sleep(1) # Prevent busy-looping on repeated errors
+
+if __name__ == &quot;__main__&quot;:
+    asyncio.run(consume_events())
+</code></pre>
+<p>To run this:<br />
+1.  Start a Redis server on <code>localhost:6379</code>.<br />
+2.  Run the <code>produce_login_events.py</code> script in one terminal.<br />
+3.  Run the <code>consume_events.py</code> script in another terminal.<br />
+You'll observe events being produced and, when the pattern is met, the CEP processor detecting the complex event.</p>
+<h2>Performance Considerations &amp; Best Practices</h2>
+<ol>
+<li><strong>Batch Processing with <code>XREADGROUP</code></strong>: The <code>count</code> parameter in <code>xreadgroup</code> is crucial. Reading multiple messages at once (<code>count=10</code> or higher) reduces network round trips and can significantly boost throughput, especially when processing many events.</li>
+<li><strong>Consumer Group Scaling</strong>: Run multiple instances of your <code>Async Python CEP Processor</code>, each with a unique <code>CONSUMER_NAME</code> within the same <code>CONSUMER_GROUP_NAME</code>. Redis will automatically distribute messages among these consumers, enabling horizontal scaling.</li>
+<li><strong>State Management</strong>: For more complex patterns or longer windows, storing state purely in-memory (like <code>user_states</code> in our example) might become memory-intensive or lead to data loss if a processor restarts. Consider:<ul>
+<li><strong>Externalizing State</strong>: Use Redis hashes, sorted sets, or a dedicated database (e.g., PostgreSQL, Apache Cassandra) to persist state across restarts and share state among multiple processors.</li>
+<li><strong>Time-Series Data</strong>: Redis Time Series module or dedicated time-series databases are excellent for managing event histories efficiently.</li>
+</ul>
+</li>
+<li><strong>Idempotency</strong>: Design your <code>process_event</code> logic to be idempotent. If a message is re-delivered (due to a consumer failure before <code>XACK</code>), processing it again should not lead to incorrect results or duplicate actions.</li>
+<li><strong>Error Handling and Dead Letter Queues</strong>: Implement robust error handling. For unprocessable messages, consider moving them to a "dead-letter queue" (another Redis Stream or a different system) for later inspection, rather than repeatedly retrying.</li>
+<li><strong>Monitoring</strong>: Monitor your Redis Streams (stream length, consumer group lag, pending messages) and your Python application (CPU, memory, event processing rate) to identify bottlenecks.</li>
+</ol>
+<h2>Trade-offs and When to Use This Approach</h2>
+<p>While powerful, this Async Python + Redis Streams approach has its trade-offs:</p>
+<p><strong>Pros:</strong><br />
+*   <strong>Simplicity</strong>: Easier to set up and manage than full-fledged distributed stream processing frameworks like Apache Flink or Kafka Streams, especially for teams already familiar with Redis and Python.<br />
+*   <strong>Low Latency</strong>: Redis is incredibly fast, and Async Python minimizes I/O overhead.<br />
+*   <strong>Flexibility</strong>: Python allows for complex custom logic and easy integration with other libraries.<br />
+*   <strong>Cost-Effective</strong>: Can be more resource-efficient for moderate to high throughput needs compared to heavier alternatives.</p>
+<p><strong>Cons:</strong><br />
+*   <strong>State Management Complexity</strong>: For truly massive state or very long processing windows, managing state across multiple Python instances robustly can become challenging and might necessitate external state stores.<br />
+*   <strong>Limited Built-in CEP Primitives</strong>: Unlike dedicated CEP engines, you're implementing pattern detection logic manually.<br />
+*   <strong>Scalability Limitations</strong>: While Redis Streams scale well for message delivery, the computational scaling of the <em>processing logic</em> requires careful design of your Python application. For petabyte-scale data and extremely complex, distributed stateful computations, frameworks like Apache Flink might be more appropriate.</p>
+<p>This approach is ideal for microservices where you need to react quickly to event patterns, build reactive dashboards, implement real-time fraud detection on a moderate scale, or create personalized user experiences without the operational overhead of a large-scale streaming platform.</p>
+<h2>Conclusion</h2>
+<p>Leveraging Async Python with Redis Streams provides a compelling, performant, and flexible architecture for building real-time Complex Event Processing pipelines. By combining Python's expressive power and <code>asyncio</code>'s concurrency with Redis Streams' reliable, low-latency messaging, developers can craft intelligent, reactive systems that unlock immediate insights from streaming data. As the demand for real-time responsiveness continues to grow, mastering these technologies will be crucial for building the next generation of data-driven applications.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>

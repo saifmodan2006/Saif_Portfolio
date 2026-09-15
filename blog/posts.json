@@ -1,5 +1,20 @@
 [
   {
+    "slug": "real-time-complex-event-processing-async-python-redis-streams",
+    "title": "Real-time Complex Event Processing with Async Python and Redis Streams",
+    "metaDescription": "Master real-time complex event processing using Async Python and Redis Streams. Build high-throughput, low-latency data pipelines for instant insights and reactive systems.",
+    "tags": [
+      "Python",
+      "AsyncIO",
+      "Redis",
+      "Event-Driven",
+      "Real-time Analytics"
+    ],
+    "date": "2026-09-15",
+    "readingTime": "10 min read",
+    "image": "assets/blog/real-time-complex-event-processing-async-python-redis-streams-cover.png"
+  },
+  {
     "slug": "mastering-observability-async-python-microservices",
     "title": "Mastering Observability: Structured Logging, Metrics, and Tracing for Async Python Microservices",
     "metaDescription": "Unlock robust performance monitoring for async Python microservices. Learn structured logging, metrics with Prometheus, and distributed tracing with OpenTelemetry.",
