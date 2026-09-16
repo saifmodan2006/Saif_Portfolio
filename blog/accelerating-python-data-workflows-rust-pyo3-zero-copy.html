@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Accelerating Python Data Workflows: Bridging Performance Gaps with Rust and PyO3 | Saif Modan</title>
+  <meta name="description" content="Boost Python data processing with Rust! Learn PyO3 and zero-copy techniques for unparalleled performance in computationally intensive tasks.">
+  <meta name="keywords" content="Python, Rust, Performance Engineering, Data Analytics, PyO3, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/accelerating-python-data-workflows-rust-pyo3-zero-copy.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Accelerating Python Data Workflows: Bridging Performance Gaps with Rust and PyO3 | Saif Modan">
+  <meta property="og:description" content="Boost Python data processing with Rust! Learn PyO3 and zero-copy techniques for unparalleled performance in computationally intensive tasks.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/accelerating-python-data-workflows-rust-pyo3-zero-copy.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/accelerating-python-data-workflows-rust-pyo3-zero-copy-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Accelerating Python Data Workflows: Bridging Performance Gaps with Rust and PyO3">
+  <meta property="article:published_time" content="2026-09-16">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Accelerating Python Data Workflows: Bridging Performance Gaps with Rust and PyO3 | Saif Modan">
+  <meta name="twitter:description" content="Boost Python data processing with Rust! Learn PyO3 and zero-copy techniques for unparalleled performance in computationally intensive tasks.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/accelerating-python-data-workflows-rust-pyo3-zero-copy-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Accelerating Python Data Workflows: Bridging Performance Gaps with Rust and PyO3",
+  "description": "Boost Python data processing with Rust! Learn PyO3 and zero-copy techniques for unparalleled performance in computationally intensive tasks.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/accelerating-python-data-workflows-rust-pyo3-zero-copy-cover.png"
+  ],
+  "datePublished": "2026-09-16",
+  "dateModified": "2026-09-16",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/accelerating-python-data-workflows-rust-pyo3-zero-copy.html"
+  },
+  "keywords": "Python, Rust, Performance Engineering, Data Analytics, PyO3"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">Rust</span><span class="blog-tag-pill">Performance Engineering</span><span class="blog-tag-pill">Data Analytics</span><span class="blog-tag-pill">PyO3</span>
+          </div>
+          <h1 class="blog-article-title">Accelerating Python Data Workflows: Bridging Performance Gaps with Rust and PyO3</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-16</span>
+              <span>•</span>
+              <span>10 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/accelerating-python-data-workflows-rust-pyo3-zero-copy-cover.png" alt="Accelerating Python Data Workflows: Bridging Performance Gaps with Rust and PyO3" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <p>Python's ubiquity in data science and analytics is undeniable, thanks to its rich ecosystem and ease of use. However, for computationally intensive data workflows—think large-scale numerical computations, complex string manipulations, or high-frequency data transformations—Python's Global Interpreter Lock (GIL) and interpreted nature often become a bottleneck. While libraries like NumPy, Pandas, and Polars (which often use C/Rust under the hood) abstract away much of this, there are always custom algorithms or specific data processing steps where native Python struggles to meet high-performance demands.</p>
+<p>This is where Rust enters the picture. Known for its unparalleled performance, memory safety, and concurrency, Rust is an ideal candidate for offloading these critical, performance-sensitive sections of Python code. But how do we bridge these two powerful languages effectively without incurring significant serialization overhead? The answer lies in <code>PyO3</code>, a robust framework for creating Python bindings for Rust code, coupled with intelligent zero-copy data exchange strategies. As an AI Developer and Data Analytics specialist, I've consistently sought ways to push the boundaries of Python's performance, and integrating Rust has proven to be a game-changer for specific bottlenecks. This post will delve into practical techniques for leveraging Rust with <code>PyO3</code> to supercharge your Python data workflows, focusing on achieving true high-throughput performance through zero-copy data sharing.</p>
+<h2>The Power of PyO3: Seamless Python-Rust Interoperability</h2>
+<p><code>PyO3</code> is a Rust library that allows you to write native Python modules in Rust, enabling seamless interoperability. It handles the intricacies of Python's C API, making it straightforward to expose Rust functions, classes, and even entire modules to Python.</p>
+<h3>Basic PyO3 Setup and Function Calls</h3>
+<p>Let's start with a simple example. Suppose we have a CPU-bound function in Python that performs a heavy calculation. We can rewrite this in Rust and expose it via <code>PyO3</code>.</p>
+<p>First, you'll need a <code>Cargo.toml</code> (Rust's package manager configuration) for your Rust project:</p>
+<pre><code class="language-toml">[package]
+name = &quot;my_rust_module&quot;
+version = &quot;0.1.0&quot;
+edition = &quot;2021&quot;
+
+[lib]
+name = &quot;my_rust_module&quot;
+crate-type = [&quot;cdylib&quot;]
+
+[dependencies]
+pyo3 = { version = &quot;0.20&quot;, features = [&quot;extension-module&quot;] }
+</code></pre>
+<p>Next, create <code>src/lib.rs</code> with your Rust logic:</p>
+<pre><code class="language-rust">use pyo3::prelude::*;
+
+/// Formats the sum of two numbers as a string.
+#[pyfunction]
+fn sum_as_string(a: usize, b: usize) -&gt; PyResult&lt;String&gt; {
+    Ok((a + b).to_string())
+}
+
+/// A Python module implemented in Rust.
+#[pymodule]
+fn my_rust_module(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
+    Ok(())
+}
+</code></pre>
+<p>To build this, use <code>maturin develop</code> (you'll need to install <code>maturin</code> with <code>pip install maturin</code>). This will compile your Rust code and install it as a Python package in your current environment.</p>
+<p>Now, from Python:</p>
+<pre><code class="language-python">import my_rust_module
+
+result = my_rust_module.sum_as_string(10, 20)
+print(result) # Output: 30
+</code></pre>
+<p>This is a basic demonstration. The real power comes when dealing with large datasets.</p>
+<h2>Zero-Copy Data Exchange: Critical for High-Throughput</h2>
+<p>The true performance gains from integrating Rust come not just from offloading computation, but from doing so <em>efficiently</em>. Passing large data structures between Python and Rust by serializing them (e.g., to JSON or pickle) and then deserializing them is incredibly slow and memory-intensive. This overhead can easily negate any performance benefits from the Rust computation. The solution is <strong>zero-copy data exchange</strong>. This technique allows both Python and Rust to operate on the same underlying memory buffer, eliminating the need for costly data copying.</p>
+<h3>Understanding the Problem</h3>
+<p>Imagine you have a NumPy array with millions of floating-point numbers. If you were to pass this to a Rust function by first converting it to a Python list, then to a Rust <code>Vec</code>, you'd incur significant overhead. Each conversion involves new memory allocations and data copying.</p>
+<h3>Leveraging Shared Memory for High-Throughput</h3>
+<p>Python's data science ecosystem is built on the concept of array protocols (like <code>__array_interface__</code> or <code>__buffer__</code>), which allow different libraries to share underlying memory buffers. <code>PyO3</code> provides excellent support for interacting with these protocols, especially with <code>numpy</code> arrays.</p>
+<p>Let's consider an example where we process a large NumPy array in Rust.</p>
+<p>Update <code>Cargo.toml</code>:</p>
+<pre><code class="language-toml">[package]
+name = &quot;my_rust_module&quot;
+version = &quot;0.1.0&quot;
+edition = &quot;2021&quot;
+
+[lib]
+name = &quot;my_rust_module&quot;
+crate-type = [&quot;cdylib&quot;]
+
+[dependencies]
+pyo3 = { version = &quot;0.20&quot;, features = [&quot;extension-module&quot;, &quot;pyproto&quot;] }
+numpy = { version = &quot;0.20&quot;, optional = true } # Add numpy feature for PyO3
+</code></pre>
+<p>Note: <code>numpy</code> here refers to the <code>pyo3-numpy</code> crate, which provides <code>numpy</code> integration for <code>PyO3</code>.</p>
+<p>Now, in <code>src/lib.rs</code>, let's define a function that takes a NumPy array, performs an element-wise operation, and returns a new NumPy array, all efficiently.</p>
+<pre><code class="language-rust">use pyo3::prelude::*;
+use pyo3_numpy::{PyArray1, ToPyArray};
+
+#[pyfunction]
+fn process_numpy_array&lt;'py&gt;(py: Python&lt;'py&gt;, input_array: &amp;PyArray1&lt;f64&gt;) -&gt; PyResult&lt;&amp;'py PyArray1&lt;f64&gt;&gt; {
+    // Get a read-only view of the input array. This is zero-copy.
+    let input_slice = input_array.as_slice()?;
+
+    // Create a new output array. For operations that modify in-place,
+    // you might take a mutable reference, but for returning new data,
+    // creating a new array is standard.
+    let mut output_vec: Vec&lt;f64&gt; = Vec::with_capacity(input_slice.len());
+    for &amp;val in input_slice {
+        // Example operation: square each element and add a constant
+        output_vec.push(val * val + 5.0);
+    }
+
+    // Convert the Rust Vec back to a NumPy array.
+    // This involves a copy from Rust Vec to Python's NumPy array data buffer.
+    // For true zero-copy *return*, one would need to pre-allocate in Python
+    // and pass a mutable view, or use Arrow/shared memory mechanisms.
+    Ok(output_vec.to_pyarray(py))
+}
+
+#[pymodule]
+fn my_rust_module(_py: Python, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    m.add_function(wrap_pyfunction!(process_numpy_array, m)?)?;
+    Ok(())
+}
+</code></pre>
+<p>And in Python:</p>
+<pre><code class="language-python">import numpy as np
+import my_rust_module
+import time
+
+# Create a large NumPy array
+size = 10_000_000
+data = np.random.rand(size).astype(np.float64)
+
+# Benchmark Rust processing
+start_time = time.perf_counter()
+result_rust = my_rust_module.process_numpy_array(data)
+end_time = time.perf_counter()
+print(f&quot;Rust processing time: {end_time - start_time:.4f} seconds&quot;)
+
+# Benchmark pure Python processing (for comparison)
+start_time = time.perf_counter()
+result_python = data * data + 5.0
+end_time = time.perf_counter()
+print(f&quot;Python (NumPy) processing time: {end_time - start_time:.4f} seconds&quot;)
+
+# Verify results (optional)
+# assert np.allclose(result_rust, result_python)
+</code></pre>
+<p>In this example, when <code>process_numpy_array</code> receives <code>input_array</code>, <code>PyArray1::as_slice()</code> provides a zero-copy view into the NumPy array's memory. The data is not copied when it enters Rust. The return, <code>output_vec.to_pyarray(py)</code>, does involve a copy from the Rust <code>Vec</code> to a <em>new</em> NumPy array's buffer. For scenarios requiring <em>absolute</em> zero-copy round trips, one would typically pre-allocate the output array in Python and pass a mutable view to Rust, or leverage more advanced shared memory constructs like Apache Arrow buffers, which <code>PyO3</code> also supports via <code>pyarrow</code>.</p>
+<h3>Deeper Zero-Copy: Apache Arrow and PyO3</h3>
+<p>For more complex data structures, especially tabular data, Apache Arrow is a powerful standard for in-memory columnar data. It's designed for zero-copy data exchange across different systems and languages. <code>PyO3</code> can directly interact with Arrow's C Data Interface, enabling true zero-copy sharing of Arrow arrays between Python (e.g., via <code>pyarrow</code> or Polars) and Rust.</p>
+<p>This approach is particularly beneficial when you're passing dataframes or large batches of records, as it avoids the overhead of converting between different memory layouts.</p>
+<pre><code class="language-toml"># In Cargo.toml
+[dependencies]
+pyo3 = { version = &quot;0.20&quot;, features = [&quot;extension-module&quot;, &quot;pyproto&quot;] }
+arrow = { version = &quot;48&quot;, features = [&quot;pyarrow&quot;] } # Integrate with pyarrow
+</code></pre>
+<pre><code class="language-rust">// In src/lib.rs (conceptual example, actual implementation is more involved)
+use pyo3::prelude::*;
+use arrow::pyarrow::PyArrowConvert;
+use arrow::array::{Float64Array, Array};
+use std::sync::Arc;
+
+#[pyfunction]
+fn process_arrow_array&lt;'py&gt;(py: Python&lt;'py&gt;, input_array: &amp;PyAny) -&gt; PyResult&lt;&amp;'py PyAny&gt; {
+    // Convert PyAny (which could be a pyarrow.Array) to a Rust Arrow Array
+    let rust_array = Float64Array::from_pyarrow(input_array)?;
+
+    // Perform operations on the Rust Arrow array
+    let processed_data: Vec&lt;f64&gt; = rust_array.iter()
+        .filter_map(|x| x) // Filter out nulls for simplicity
+        .map(|val| val * 2.0 + 10.0)
+        .collect();
+
+    // Create a new Rust Arrow array from processed data
+    let output_array = Arc::new(Float64Array::from(processed_data)) as Arc&lt;dyn Array&gt;;
+
+    // Convert back to a pyarrow.Array (zero-copy if compatible, or minimal copy)
+    output_array.to_pyarrow(py)
+}
+
+// ... pymodule definition ...
+</code></pre>
+<p>This pattern, while more complex to set up, offers the highest performance for large-scale tabular data by leveraging a common memory format.</p>
+<h2>Architectural Considerations</h2>
+<p>Integrating Rust into a Python project isn't a silver bullet for all performance issues. It's a strategic decision that requires careful architectural planning.</p>
+<h3>Identifying Performance Hotspots</h3>
+<p>The first step is always <strong>profiling</strong>. Use tools like <code>cProfile</code> or <code>py-spy</code> to identify the exact functions or loops that consume the most CPU time. These are your candidates for Rust optimization. Don't optimize code that isn't a bottleneck; the overhead of FFI (Foreign Function Interface) and managing a polyglot codebase can outweigh marginal gains.</p>
+<h3>Module Design and Packaging</h3>
+<p>When designing your Rust module:</p>
+<ul>
+<li><strong>Granularity</strong>: Keep Rust functions focused on specific, CPU-bound tasks. Avoid exposing entire complex Python objects to Rust unless absolutely necessary, as this increases coupling.</li>
+<li><strong>Data Flow</strong>: Prioritize passing simple, contiguous data types (like NumPy arrays, raw bytes, or Arrow arrays) rather than complex Python objects.</li>
+<li><strong>Error Handling</strong>: Rust's robust error handling should be translated gracefully into Python exceptions using <code>PyResult</code> and <code>PyErr</code>.</li>
+<li><strong>Packaging</strong>: <code>maturin</code> is the de-facto standard for building and distributing <code>PyO3</code> projects. It handles compilation for different platforms and creates standard Python wheels, simplifying deployment.</li>
+</ul>
+<h2>Performance Benchmarking and Trade-offs</h2>
+<p>Always benchmark your Rust-accelerated code against its pure Python counterpart (or optimized Python libraries like NumPy/Polars). Use <code>timeit</code> or <code>perf_counter</code> for micro-benchmarks and more comprehensive profiling for larger workflows.</p>
+<h3>Measuring Impact</h3>
+<p>The speedup factor will vary significantly based on the nature of the computation. Simple arithmetic on large arrays will show massive gains. Operations involving frequent Python object creation or garbage collection within the Rust code will see diminishing returns.</p>
+<h3>Trade-offs</h3>
+<ul>
+<li><strong>Developer Experience</strong>: Rust has a steeper learning curve than Python. Maintaining a polyglot codebase requires developers proficient in both languages.</li>
+<li><strong>Build Complexity</strong>: Adding Rust introduces a compilation step. While <code>maturin</code> simplifies this, it's still more complex than pure Python deployments, especially across different OS/architectures.</li>
+<li><strong>Ecosystem</strong>: Rust's data science ecosystem is rapidly growing but not as mature or extensive as Python's. You might find yourself implementing algorithms that are readily available in Python.</li>
+<li><strong>Debugging</strong>: Debugging across language boundaries can be more challenging.</li>
+</ul>
+<h2>Practical Use Cases</h2>
+<p>Where does this hybrid approach shine?</p>
+<ul>
+<li><strong>Custom Numerical Algorithms</strong>: Implementing highly optimized versions of non-standard statistical functions, simulations, or mathematical models.</li>
+<li><strong>High-Performance String Processing</strong>: For tasks like parsing logs, complex regex matching over large texts, or custom text transformations where Python's string operations might be too slow.</li>
+<li><strong>Image and Signal Processing</strong>: Low-level pixel manipulation, filter applications, or signal transformations that need to run at very high frame rates or throughput.</li>
+<li><strong>Data Serialization/Deserialization</strong>: Custom, highly efficient binary formats where existing Python libraries might add too much overhead.</li>
+<li><strong>Game Development/High-Frequency Trading</strong>: Scenarios demanding absolute minimal latency for specific computational steps.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>The integration of Rust into Python data workflows via <code>PyO3</code> and zero-copy techniques offers a powerful paradigm for overcoming Python's performance limitations in critical sections. It's not about replacing Python, but augmenting it. By strategically identifying bottlenecks and offloading them to Rust, data engineers and AI developers can build robust, high-throughput systems that combine Python's development agility with Rust's raw speed and memory safety.</p>
+<p>This polyglot approach allows us to architect solutions that truly scale, delivering unparalleled performance for computationally intensive tasks without sacrificing the productivity and rich ecosystem that makes Python so invaluable. As data volumes and processing demands continue to grow, mastering such advanced interoperability techniques will become an increasingly vital skill in the modern data engineering toolkit.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>

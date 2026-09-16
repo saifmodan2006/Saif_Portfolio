@@ -1,5 +1,20 @@
 [
   {
+    "slug": "accelerating-python-data-workflows-rust-pyo3-zero-copy",
+    "title": "Accelerating Python Data Workflows: Bridging Performance Gaps with Rust and PyO3",
+    "metaDescription": "Boost Python data processing with Rust! Learn PyO3 and zero-copy techniques for unparalleled performance in computationally intensive tasks.",
+    "tags": [
+      "Python",
+      "Rust",
+      "Performance Engineering",
+      "Data Analytics",
+      "PyO3"
+    ],
+    "date": "2026-09-16",
+    "readingTime": "10 min read",
+    "image": "assets/blog/accelerating-python-data-workflows-rust-pyo3-zero-copy-cover.png"
+  },
+  {
     "slug": "real-time-complex-event-processing-async-python-redis-streams",
     "title": "Real-time Complex Event Processing with Async Python and Redis Streams",
     "metaDescription": "Master real-time complex event processing using Async Python and Redis Streams. Build high-throughput, low-latency data pipelines for instant insights and reactive systems.",
