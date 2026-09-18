@@ -1,5 +1,20 @@
 [
   {
+    "slug": "scaling-async-background-tasks-python-fastapi-queues",
+    "title": "Scaling Asynchronous Background Tasks: A Deep Dive into Python, FastAPI, and Distributed Queues",
+    "metaDescription": "Master building scalable async background task systems in Python. Explore FastAPI, distributed queues, worker patterns, idempotency, and monitoring for robust microservices.",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "Asynchronous Programming",
+      "Distributed Systems",
+      "Task Queues"
+    ],
+    "date": "2026-09-18",
+    "readingTime": "9 min read",
+    "image": "assets/blog/scaling-async-background-tasks-python-fastapi-queues-cover.png"
+  },
+  {
     "slug": "architecting-idempotent-fault-tolerant-async-celery",
     "title": "Architecting Idempotent and Fault-Tolerant Background Task Processors with Async Python and Celery",
     "metaDescription": "Master building resilient, idempotent background task processors using Async Python and Celery. Ensure reliable, scalable execution for critical operations.",
