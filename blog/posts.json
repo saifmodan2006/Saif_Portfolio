@@ -1,5 +1,20 @@
 [
   {
+    "slug": "rust-ffi-high-performance-data-async-python",
+    "title": "Accelerating Data Pipelines: Rust FFI for High-Performance Data Ingestion in Async Python",
+    "metaDescription": "Boost Python data pipelines with Rust FFI. Learn to integrate high-performance Rust modules for lightning-fast data ingestion and transformation in async Python services.",
+    "tags": [
+      "Python",
+      "Rust",
+      "FFI",
+      "Asynchronous Programming",
+      "High Performance Computing"
+    ],
+    "date": "2026-09-19",
+    "readingTime": "10 min read",
+    "image": "assets/blog/rust-ffi-high-performance-data-async-python-cover.png"
+  },
+  {
     "slug": "scaling-async-background-tasks-python-fastapi-queues",
     "title": "Scaling Asynchronous Background Tasks: A Deep Dive into Python, FastAPI, and Distributed Queues",
     "metaDescription": "Master building scalable async background task systems in Python. Explore FastAPI, distributed queues, worker patterns, idempotency, and monitoring for robust microservices.",
