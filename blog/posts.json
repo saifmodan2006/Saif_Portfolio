@@ -1,5 +1,20 @@
 [
   {
+    "slug": "architecting-ultra-low-latency-microservices-async-grpc-protobuf-python",
+    "title": "Architecting Ultra-Low Latency Microservices: Async gRPC with Protobuf in Python",
+    "metaDescription": "Unlock peak microservice performance with async gRPC and Protobuf in Python. Learn to build ultra-low latency, high-throughput inter-service communication.",
+    "tags": [
+      "Python",
+      "gRPC",
+      "Protobuf",
+      "Microservices",
+      "Performance Engineering"
+    ],
+    "date": "2026-09-20",
+    "readingTime": "8 min read",
+    "image": "assets/blog/architecting-ultra-low-latency-microservices-async-grpc-protobuf-python-cover.png"
+  },
+  {
     "slug": "rust-ffi-high-performance-data-async-python",
     "title": "Accelerating Data Pipelines: Rust FFI for High-Performance Data Ingestion in Async Python",
     "metaDescription": "Boost Python data pipelines with Rust FFI. Learn to integrate high-performance Rust modules for lightning-fast data ingestion and transformation in async Python services.",
