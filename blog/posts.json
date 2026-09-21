@@ -1,5 +1,20 @@
 [
   {
+    "slug": "scaling-async-batch-jobs-high-performance-python-redis-queues",
+    "title": "Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis",
+    "metaDescription": "Learn to architect high-throughput asynchronous batch processing in Python using FastAPI, Redis, and custom async worker patterns for scalable background job execution.",
+    "tags": [
+      "Python",
+      "Asynchronous Programming",
+      "Task Queues",
+      "Redis",
+      "Performance Engineering"
+    ],
+    "date": "2026-09-21",
+    "readingTime": "9 min read",
+    "image": "assets/blog/scaling-async-batch-jobs-high-performance-python-redis-queues-cover.png"
+  },
+  {
     "slug": "architecting-ultra-low-latency-microservices-async-grpc-protobuf-python",
     "title": "Architecting Ultra-Low Latency Microservices: Async gRPC with Protobuf in Python",
     "metaDescription": "Unlock peak microservice performance with async gRPC and Protobuf in Python. Learn to build ultra-low latency, high-throughput inter-service communication.",

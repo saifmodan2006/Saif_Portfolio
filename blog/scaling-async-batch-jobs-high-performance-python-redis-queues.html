@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis | Saif Modan</title>
+  <meta name="description" content="Learn to architect high-throughput asynchronous batch processing in Python using FastAPI, Redis, and custom async worker patterns for scalable background job execution.">
+  <meta name="keywords" content="Python, Asynchronous Programming, Task Queues, Redis, Performance Engineering, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-async-batch-jobs-high-performance-python-redis-queues.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis | Saif Modan">
+  <meta property="og:description" content="Learn to architect high-throughput asynchronous batch processing in Python using FastAPI, Redis, and custom async worker patterns for scalable background job execution.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-async-batch-jobs-high-performance-python-redis-queues.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-async-batch-jobs-high-performance-python-redis-queues-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis">
+  <meta property="article:published_time" content="2026-09-21">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis | Saif Modan">
+  <meta name="twitter:description" content="Learn to architect high-throughput asynchronous batch processing in Python using FastAPI, Redis, and custom async worker patterns for scalable background job execution.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-async-batch-jobs-high-performance-python-redis-queues-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis",
+  "description": "Learn to architect high-throughput asynchronous batch processing in Python using FastAPI, Redis, and custom async worker patterns for scalable background job execution.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/scaling-async-batch-jobs-high-performance-python-redis-queues-cover.png"
+  ],
+  "datePublished": "2026-09-21",
+  "dateModified": "2026-09-21",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/scaling-async-batch-jobs-high-performance-python-redis-queues.html"
+  },
+  "keywords": "Python, Asynchronous Programming, Task Queues, Redis, Performance Engineering"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">Asynchronous Programming</span><span class="blog-tag-pill">Task Queues</span><span class="blog-tag-pill">Redis</span><span class="blog-tag-pill">Performance Engineering</span>
+          </div>
+          <h1 class="blog-article-title">Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-21</span>
+              <span>•</span>
+              <span>9 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/scaling-async-batch-jobs-high-performance-python-redis-queues-cover.png" alt="Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <h1>Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis</h1>
+<p>In the realm of modern web services and data-intensive applications, the ability to process large volumes of data or execute computationally expensive operations without blocking the primary request-response cycle is paramount. Imagine a scenario where a user uploads a large file for processing, or an e-commerce platform needs to generate complex reports for thousands of orders. Performing these tasks synchronously within the user's request would lead to unacceptable latency, timeouts, and a poor user experience. This challenge is precisely where asynchronous batch job processing, powered by robust task queues, becomes not just beneficial but essential for building scalable and responsive systems.</p>
+<p>As an AI Developer and Data Analytics specialist, I frequently encounter systems struggling under the weight of these long-running operations. The immediate problem is often a bottleneck in a FastAPI endpoint that's trying to do too much. The solution lies in offloading these heavy tasks to dedicated background workers, allowing the API to respond instantly while the work gets done efficiently in the background. This blog post will delve into architecting such a system using Python's <code>asyncio</code> capabilities, FastAPI as the task producer, and Redis as a lightweight, high-performance message broker.</p>
+<h2>The Bottleneck of Synchronous Processing</h2>
+<p>Traditional request-response models in web applications are inherently synchronous. When a user makes a request, the server processes it from start to finish before sending a response. If any part of this process involves a long-running computation, a complex database query, or an external API call with high latency, the entire request thread remains blocked. This not only delays the user's response but also ties up server resources, preventing other requests from being processed. In a high-throughput environment, this quickly leads to resource exhaustion, degraded performance, and ultimately, system instability.</p>
+<p>For example, consider an endpoint that processes an image and stores metadata:</p>
+<pre><code class="language-python"># This is a BAD example demonstrating synchronous bottleneck
+from fastapi import FastAPI, UploadFile
+import time
+
+app = FastAPI()
+
+@app.post(&quot;/process-image-sync/&quot;)
+async def process_image_sync(image: UploadFile):
+    start_time = time.time()
+    # Simulate a heavy, CPU-bound image processing task
+    time.sleep(5) 
+    # Simulate I/O bound task like saving to DB
+    time.sleep(2)
+    end_time = time.time()
+    return {&quot;message&quot;: &quot;Image processed synchronously&quot;, &quot;filename&quot;: image.filename, &quot;duration&quot;: f&quot;{end_time - start_time:.2f}s&quot;}
+</code></pre>
+<p>A single request to <code>/process-image-sync/</code> would take at least 7 seconds, blocking the server for that duration. Multiple concurrent requests would quickly overwhelm the server.</p>
+<h2>Asynchronous Task Queues to the Rescue</h2>
+<p>The fundamental solution is to decouple the task submission from its execution. This is where task queues shine. A task queue system typically consists of:</p>
+<ol>
+<li><strong>Producers</strong>: Applications (like our FastAPI service) that generate tasks and push them onto the queue.</li>
+<li><strong>Brokers</strong>: A message queue system (like Redis, RabbitMQ, Kafka) that stores tasks and ensures reliable delivery.</li>
+<li><strong>Consumers/Workers</strong>: Independent processes that pull tasks from the queue, execute them, and handle results.</li>
+</ol>
+<p>By offloading long-running tasks to a queue, the producer can immediately acknowledge the request, providing a quick response to the user, while the heavy lifting happens asynchronously in the background. This significantly improves API responsiveness and overall system scalability.</p>
+<h2>Core Components of a High-Performance Task Queue System</h2>
+<h3>1. Task Producer: FastAPI</h3>
+<p>FastAPI, with its inherent <code>async</code> capabilities, is an excellent choice for a task producer. It can handle a high volume of concurrent requests, quickly validate incoming data, and push tasks to Redis without blocking. We'll use a simple Pydantic model for task data and <code>redis-py</code> for interacting with Redis.</p>
+<pre><code class="language-python"># app/main.py
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+import redis.asyncio as redis
+import json
+import uuid
+import os
+
+app = FastAPI()
+
+# Configuration for Redis - typically from environment variables
+REDIS_HOST = os.getenv(&quot;REDIS_HOST&quot;, &quot;localhost&quot;)
+REDIS_PORT = int(os.getenv(&quot;REDIS_PORT&quot;, 6379))
+REDIS_DB = int(os.getenv(&quot;REDIS_DB&quot;, 0))
+
+r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
+
+class TaskPayload(BaseModel):
+    data: dict
+    task_type: str
+
+@app.post(&quot;/submit-task/&quot;)
+async def submit_task(payload: TaskPayload):
+    task_id = str(uuid.uuid4())
+    task_data = {
+        &quot;task_id&quot;: task_id,
+        &quot;task_type&quot;: payload.task_type,
+        &quot;data&quot;: payload.data
+    }
+    try:
+        # Push task to a Redis List acting as a queue
+        await r.lpush(&quot;task_queue&quot;, json.dumps(task_data))
+        return {&quot;message&quot;: &quot;Task submitted successfully&quot;, &quot;task_id&quot;: task_id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f&quot;Failed to submit task: {e}&quot;)
+</code></pre>
+<p>This FastAPI endpoint immediately pushes a JSON-serialized task to a Redis list named <code>task_queue</code> and returns a task ID. The actual processing is delegated.</p>
+<h3>2. Task Broker: Redis</h3>
+<p>Redis is a fantastic choice for a message broker in high-performance Python systems due to its speed, simplicity, and excellent <code>asyncio</code> support via <code>redis-py</code>. We're using a simple list (<code>LPUSH</code> to add, <code>BRPOP</code> to retrieve) to implement a basic queue. For more advanced features like consumer groups, retries, and acknowledgments, Redis Streams would be a more robust option (though we're avoiding direct overlap with previous topics, a simple list for a basic queue demonstrates the core concept here).</p>
+<h3>3. Task Consumer/Worker: Asyncio + Redis</h3>
+<p>The heart of our high-performance system is the asynchronous worker. This worker constantly polls Redis for new tasks and executes them. For CPU-bound tasks, we'll leverage <code>loop.run_in_executor</code> to prevent blocking the <code>asyncio</code> event loop. For I/O-bound tasks, <code>asyncio.gather</code> can concurrently manage multiple operations.</p>
+<pre><code class="language-python"># worker/worker.py
+import asyncio
+import redis.asyncio as redis
+import json
+import os
+import time
+from concurrent.futures import ProcessPoolExecutor
+
+# Configuration for Redis
+REDIS_HOST = os.getenv(&quot;REDIS_HOST&quot;, &quot;localhost&quot;)
+REDIS_PORT = int(os.getenv(&quot;REDIS_PORT&quot;, 6379))
+REDIS_DB = int(os.getenv(&quot;REDIS_DB&quot;, 0))
+
+r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB)
+
+# A simple executor for CPU-bound tasks
+executor = ProcessPoolExecutor(max_workers=os.cpu_count())
+
+async def process_data_cpu_bound(data: dict):
+    print(f&quot;[CPU-BOUND] Processing task with data: {data['value']}&quot;)
+    # Simulate heavy CPU computation
+    time.sleep(data.get(&quot;duration&quot;, 5))
+    result = f&quot;Processed CPU-bound task for {data['value']}&quot;
+    print(f&quot;[CPU-BOUND] Finished task for data: {data['value']}&quot;)
+    return result
+
+async def process_data_io_bound(data: dict):
+    print(f&quot;[IO-BOUND] Processing task with data: {data['value']}&quot;)
+    # Simulate heavy I/O operation (e.g., network request, DB write)
+    await asyncio.sleep(data.get(&quot;duration&quot;, 2))
+    result = f&quot;Processed I/O-bound task for {data['value']}&quot;
+    print(f&quot;[IO-BOUND] Finished task for data: {data['value']}&quot;)
+    return result
+
+async def execute_task(task_payload: dict):
+    task_type = task_payload.get(&quot;task_type&quot;)
+    task_id = task_payload.get(&quot;task_id&quot;)
+    data = task_payload.get(&quot;data&quot;)
+
+    print(f&quot;Worker received task {task_id} of type {task_type}&quot;)
+
+    try:
+        if task_type == &quot;cpu_intensive&quot;:
+            # Run CPU-bound task in a separate process to avoid blocking event loop
+            loop = asyncio.get_running_loop()
+            result = await loop.run_in_executor(
+                executor,
+                process_data_cpu_bound, # Pass the synchronous function
+                data
+            )
+        elif task_type == &quot;io_intensive&quot;:
+            # Run I/O-bound task directly in the event loop
+            result = await process_data_io_bound(data)
+        else:
+            result = f&quot;Unknown task type: {task_type}&quot;
+            print(result)
+            return
+
+        print(f&quot;Task {task_id} completed with result: {result}&quot;)
+        # Optionally, store result in Redis or another store
+        await r.set(f&quot;task_result:{task_id}&quot;, json.dumps({&quot;status&quot;: &quot;completed&quot;, &quot;result&quot;: result}))
+
+    except Exception as e:
+        print(f&quot;Error processing task {task_id}: {e}&quot;)
+        await r.set(f&quot;task_result:{task_id}&quot;, json.dumps({&quot;status&quot;: &quot;failed&quot;, &quot;error&quot;: str(e)}))
+
+async def main_worker_loop():
+    print(&quot;Worker started. Waiting for tasks...&quot;)
+    while True:
+        try:
+            # BRPOP (Blocking Right POP) waits for an item to appear in the list
+            # timeout=1 ensures we can gracefully shut down or check other conditions
+            _, task_json = await r.brpop(&quot;task_queue&quot;, timeout=1)
+            if task_json:
+                task_payload = json.loads(task_json)
+                # Schedule task execution without blocking the loop for the next BRPOP
+                asyncio.create_task(execute_task(task_payload))
+            else:
+                # No task in the last second, continue polling
+                pass
+        except asyncio.CancelledError:
+            print(&quot;Worker loop cancelled.&quot;)
+            break
+        except Exception as e:
+            print(f&quot;Error in worker loop: {e}&quot;)
+            await asyncio.sleep(1) # Prevent busy-loop on error
+
+if __name__ == &quot;__main__&quot;:
+    try:
+        asyncio.run(main_worker_loop())
+    except KeyboardInterrupt:
+        print(&quot;Worker shutting down...&quot;)
+        executor.shutdown(wait=True)
+        asyncio.run(r.close())
+</code></pre>
+<p>This worker demonstrates key performance patterns:</p>
+<ul>
+<li><strong><code>r.brpop</code></strong>: Efficiently waits for tasks without busy-waiting, reducing CPU usage when the queue is empty.</li>
+<li><strong><code>asyncio.create_task</code></strong>: Submits the <code>execute_task</code> coroutine to the event loop, allowing the worker to immediately go back to polling Redis for the <em>next</em> task, enabling high concurrency for I/O-bound operations.</li>
+<li><strong><code>loop.run_in_executor</code></strong>: Crucial for CPU-bound tasks. It moves the blocking computation to a separate process (via <code>ProcessPoolExecutor</code>), preventing it from freezing the <code>asyncio</code> event loop. This is how Python achieves true parallelism for CPU-bound work within an <code>asyncio</code> application.</li>
+</ul>
+<h2>Architectural Considerations for Scale</h2>
+<ol>
+<li><strong>Multiple Worker Instances</strong>: Deploy multiple instances of the <code>worker.py</code> script. Redis's <code>BRPOP</code> ensures that each task is consumed by only one worker, allowing horizontal scaling of processing power.</li>
+<li><strong>Resource Management</strong>: Monitor CPU, memory, and network usage of your workers. Adjust <code>max_workers</code> in <code>ProcessPoolExecutor</code> based on the available CPU cores and the nature of your tasks. For I/O-bound tasks, a single <code>asyncio</code> worker can handle thousands of concurrent connections.</li>
+<li><strong>Error Handling and Retries</strong>: Implement robust error handling. For production, consider adding dead-letter queues, exponential backoff for retries, and task state tracking beyond simple completion/failure. The example stores basic results, but a more sophisticated system would track progress.</li>
+<li><strong>Backpressure</strong>: If workers are overwhelmed, the queue length will grow. Monitor queue length and implement backpressure mechanisms (e.g., refusing new task submissions temporarily, or dynamically scaling workers).</li>
+<li><strong>Monitoring</strong>: Observe queue length, task processing rates, error rates, and worker resource utilization. This provides critical insights into system health and bottlenecks.</li>
+</ol>
+<h2>Performance Trade-offs and Best Practices</h2>
+<ul>
+<li><strong>Serialization Overhead</strong>: JSON serialization/deserialization adds overhead. For extremely high-throughput or complex data, consider more efficient binary formats like MessagePack or Protocol Buffers.</li>
+<li><strong>Task Granularity</strong>: Avoid overly fine-grained tasks. Batching multiple small operations into a single task can reduce queue overhead and improve efficiency. For example, instead of one task per image, a task could process a batch of 100 images.</li>
+<li><strong>Idempotency</strong>: Design tasks to be idempotent, meaning executing them multiple times has the same effect as executing them once. This simplifies retry logic and system recovery.</li>
+<li><strong>State Management</strong>: For long-running tasks, consider storing intermediate states in a persistent store (like Redis or a database) to allow for recovery or progress tracking.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>Architecting high-performance asynchronous batch job processing is a fundamental skill for building scalable and resilient Python applications. By decoupling task submission from execution using FastAPI, Redis, and <code>asyncio</code>-powered workers, we can significantly improve API responsiveness, optimize resource utilization, and handle fluctuating workloads with grace. The patterns discussed—leveraging <code>asyncio.create_task</code> for I/O concurrency and <code>loop.run_in_executor</code> for CPU parallelism—are powerful tools in the modern Python developer's arsenal. Embrace these techniques to transform your bottlenecks into highly efficient, scalable background processing pipelines.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
