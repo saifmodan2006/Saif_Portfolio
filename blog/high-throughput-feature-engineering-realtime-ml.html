@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Architecting High-Throughput Feature Engineering Pipelines for Real-time ML | Saif Modan</title>
+  <meta name="description" content="Learn to architect high-throughput feature engineering pipelines for real-time machine learning applications using Python, focusing on performance and scalability.">
+  <meta name="keywords" content="Python, Machine Learning, Data Engineering, Performance, Feature Engineering, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/high-throughput-feature-engineering-realtime-ml.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Architecting High-Throughput Feature Engineering Pipelines for Real-time ML | Saif Modan">
+  <meta property="og:description" content="Learn to architect high-throughput feature engineering pipelines for real-time machine learning applications using Python, focusing on performance and scalability.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/high-throughput-feature-engineering-realtime-ml.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-throughput-feature-engineering-realtime-ml-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Architecting High-Throughput Feature Engineering Pipelines for Real-time ML">
+  <meta property="article:published_time" content="2026-09-22">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Architecting High-Throughput Feature Engineering Pipelines for Real-time ML | Saif Modan">
+  <meta name="twitter:description" content="Learn to architect high-throughput feature engineering pipelines for real-time machine learning applications using Python, focusing on performance and scalability.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-throughput-feature-engineering-realtime-ml-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Architecting High-Throughput Feature Engineering Pipelines for Real-time ML",
+  "description": "Learn to architect high-throughput feature engineering pipelines for real-time machine learning applications using Python, focusing on performance and scalability.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/high-throughput-feature-engineering-realtime-ml-cover.png"
+  ],
+  "datePublished": "2026-09-22",
+  "dateModified": "2026-09-22",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/high-throughput-feature-engineering-realtime-ml.html"
+  },
+  "keywords": "Python, Machine Learning, Data Engineering, Performance, Feature Engineering"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">Machine Learning</span><span class="blog-tag-pill">Data Engineering</span><span class="blog-tag-pill">Performance</span><span class="blog-tag-pill">Feature Engineering</span>
+          </div>
+          <h1 class="blog-article-title">Architecting High-Throughput Feature Engineering Pipelines for Real-time ML</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-22</span>
+              <span>•</span>
+              <span>7 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/high-throughput-feature-engineering-realtime-ml-cover.png" alt="Architecting High-Throughput Feature Engineering Pipelines for Real-time ML" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <p>As an AI Developer and Data Analytics specialist, I've seen firsthand how the bottleneck in many machine learning projects isn't the model itself, but the intricate and often resource-intensive process of feature engineering. In the world of real-time ML, where decisions need to be made in milliseconds, generating features with high throughput and low latency is paramount. This isn't just about training models faster; it's about ensuring your deployed models have access to fresh, relevant data features at inference time without introducing unacceptable delays.</p>
+<h2>The Real-time Feature Engineering Imperative</h2>
+<p>Modern ML systems, especially those powering recommendation engines, fraud detection, or personalized user experiences, often operate under stringent latency requirements. The features consumed by these models must be consistently available and rapidly computable. The challenge intensifies when you consider the dual nature of feature engineering: offline for training massive datasets and online for individual predictions. Bridging this gap – ensuring consistency, performance, and scalability across both paradigms – is a non-trivial architectural hurdle.</p>
+<p>Many organizations struggle with: <br />
+*   <strong>Consistency Drift:</strong> Features engineered differently for offline training versus online inference. <br />
+*   <strong>Computational Bottlenecks:</strong> Slow feature computation leading to high inference latency or delayed model retraining. <br />
+*   <strong>Scalability Challenges:</strong> Pipelines failing under increasing data volume or request rates. <br />
+*   <strong>Resource Inefficiency:</strong> Over-provisioning compute or memory due to suboptimal feature generation logic.</p>
+<p>Our goal is to build robust pipelines that can ingest raw data, apply complex transformations, and output ready-to-use features with exceptional speed and efficiency, enabling real-time ML applications to thrive.</p>
+<h2>Core Principles for High-Throughput Feature Generation</h2>
+<p>To achieve the desired performance, we must adhere to several fundamental principles:</p>
+<h3>1. Data Locality and Minimizing I/O</h3>
+<p>Reducing the amount of data moved across networks or between storage layers is critical. Wherever possible, process data where it resides or fetch it in large, contiguous blocks. Efficient file formats (like Parquet or Apache Arrow, which Polars natively supports) and well-indexed databases significantly reduce I/O overhead.</p>
+<h3>2. Vectorized Operations and Columnar Processing</h3>
+<p>Python's strength in data processing often comes from libraries that leverage underlying C/Rust/Fortran implementations for vectorized operations. Columnar data stores and processing engines (like Polars) are inherently faster for analytical queries and transformations because they operate on entire columns at once, leading to better cache utilization and reduced overhead compared to row-wise processing.</p>
+<h3>3. Lazy Evaluation and Query Optimization</h3>
+<p>Tools that support lazy evaluation (e.g., Polars' <code>lazyframe</code> API) allow you to define a computation graph without executing it immediately. The engine can then optimize this graph, pushing down predicates, reordering operations, and minimizing intermediate materializations, resulting in significant performance gains and reduced memory usage.</p>
+<h3>4. Memory Efficiency</h3>
+<p>Large datasets can quickly exhaust available RAM. Techniques like efficient data types (e.g., smaller integers, categoricals), avoiding unnecessary data duplication, and memory-mapped files are essential. Columnar stores, again, often contribute here by storing data more compactly.</p>
+<h3>5. Parallelism and Concurrency</h3>
+<p>While Python's Global Interpreter Lock (GIL) limits true CPU-bound parallelism within a single process for multi-threading, many data processing libraries (like Polars) release the GIL during heavy computations, allowing them to leverage all available CPU cores. Asynchronous I/O (<code>asyncio</code>) is crucial for handling I/O-bound tasks concurrently, such as fetching data from multiple external services.</p>
+<h2>Python Tooling for High-Performance Feature Engineering</h2>
+<p>While Pandas remains a staple, for true high-throughput scenarios, especially with larger datasets, we often need to look further.</p>
+<h3>Polars: A Rust-Powered Dataframe Library</h3>
+<p>Polars stands out as an excellent choice for high-performance feature engineering. Written in Rust, it offers superior speed and memory efficiency compared to traditional Python dataframes, especially when dealing with large datasets. Its lazy API allows for powerful query optimization.</p>
+<p>Let's look at a common feature engineering task: calculating rolling averages and lags for time-series data.</p>
+<pre><code class="language-python">import polars as pl
+from datetime import datetime, timedelta
+
+# Sample data
+data = {
+    &quot;timestamp&quot;: [datetime(2023, 1, 1, h) for h in range(24)] + 
+                 [datetime(2023, 1, 2, h) for h in range(24)],
+    &quot;value&quot;: [float(i) + i % 5 * 0.1 for i in range(48)]
+}
+df = pl.DataFrame(data)
+
+# Feature Engineering with Polars LazyFrame
+# Calculate a 3-hour rolling mean and a 1-hour lagged value
+features_df = df.lazy()
+    .sort(&quot;timestamp&quot;)
+    .with_columns([
+        pl.col(&quot;value&quot;).rolling_mean(window_size=&quot;3h&quot;, by=&quot;timestamp&quot;).alias(&quot;rolling_mean_3h&quot;),
+        pl.col(&quot;value&quot;).shift(1).alias(&quot;value_lag_1h&quot;)
+    ])
+    .collect() # Execute the lazy plan
+
+print(features_df.head())
+</code></pre>
+<p>This example demonstrates how Polars can efficiently compute window-based features and lagged values, crucial for many time-series and sequential data problems. The <code>lazy()</code> API allows the engine to optimize the <code>sort</code> and <code>with_columns</code> operations for maximum performance.</p>
+<h3>Accelerating Custom Logic with Numba</h3>
+<p>While Polars covers many common operations, sometimes you need highly specific, custom transformations. For these CPU-bound tasks, Numba can provide significant speedups by compiling Python functions to optimized machine code.</p>
+<pre><code class="language-python">from numba import jit
+import numpy as np
+
+@jit(nopython=True)
+def custom_complex_feature(array_a: np.ndarray, array_b: np.ndarray) -&gt; np.ndarray:
+    result = np.empty_like(array_a, dtype=np.float64)
+    for i in range(len(array_a)):
+        if array_b[i] &gt; 0:
+            result[i] = np.log(array_a[i] / array_b[i]) # Example custom logic
+        else:
+            result[i] = 0.0
+    return result
+
+# Example usage with Polars (convert to numpy array for Numba)
+# df = df.with_columns(pl.struct([&quot;col_a&quot;, &quot;col_b&quot;])
+#                      .apply(lambda s: custom_complex_feature(s[&quot;col_a&quot;].to_numpy(), s[&quot;col_b&quot;].to_numpy()))
+#                      .alias(&quot;custom_feature&quot;))
+</code></pre>
+<p>Integrating Numba allows us to inject C-like performance into specific, hot paths of our feature engineering pipeline without leaving the Python ecosystem.</p>
+<h3>Asynchronous I/O for External Lookups</h3>
+<p>For features requiring real-time lookups from external services (e.g., a user profile service, a product catalog API), <code>asyncio</code> combined with <code>aiohttp</code> (for HTTP calls) or <code>asyncpg</code> (for PostgreSQL) is indispensable. This allows your Python application to make multiple non-blocking I/O requests concurrently, drastically reducing overall latency.</p>
+<pre><code class="language-python">import asyncio
+import aiohttp
+
+async def fetch_user_data(session, user_id):
+    # Simulate an API call to fetch user profile data
+    url = f&quot;https://api.example.com/users/{user_id}&quot;
+    async with session.get(url) as response:
+        return await response.json()
+
+async def get_features_for_users(user_ids):
+    async with aiohttp.ClientSession() as session:
+        tasks = [fetch_user_data(session, uid) for uid in user_ids]
+        results = await asyncio.gather(*tasks)
+        return results
+
+# Example usage:
+# user_features = await get_features_for_users([101, 102, 103])
+# print(user_features)
+</code></pre>
+<p>This pattern is vital for enriching features with data that isn't pre-computed or readily available in a local data store.</p>
+<h2>Architectural Considerations</h2>
+<h3>Offline vs. Online Feature Stores</h3>
+<p>For robust real-time ML, a common architecture involves a <strong>feature store</strong>. Offline pipelines populate an offline feature store (e.g., a data warehouse or data lake) for training. Online pipelines, often simpler and highly optimized, generate or fetch features from an online feature store (e.g., Redis, Cassandra, a dedicated low-latency service) for inference. The key is to ensure the <em>logic</em> for feature generation is consistent across both, often achieved by using a single definition layer (e.g., a Python library) that can execute efficiently in both batch and real-time contexts.</p>
+<h3>Stream Processing for Freshness</h3>
+<p>While not the primary focus here, for features requiring extreme freshness, integrating stream processing (e.g., Flink, or even a continuous Polars job on mini-batches) to continuously update an online feature store can be beneficial. This ensures features reflect the very latest events.</p>
+<h3>Batching and Micro-Batching</h3>
+<p>Even in real-time systems, processing multiple requests in small batches (micro-batching) can significantly improve throughput by amortizing overheads and allowing vectorized operations to shine. This is a common optimization for online inference services.</p>
+<h2>Conclusion</h2>
+<p>Architecting high-throughput feature engineering pipelines is a cornerstone of successful real-time machine learning deployments. By embracing principles like columnar processing, lazy evaluation, memory efficiency, and strategic use of parallelism and concurrency, we can build Python-based solutions that meet demanding performance requirements.</p>
+<p>Tools like Polars provide a powerful foundation for fast, memory-efficient data transformations. When combined with Numba for custom logic acceleration and <code>asyncio</code> for efficient external data lookups, Python engineers have a formidable toolkit to tackle even the most challenging real-time feature engineering problems. The journey from raw data to actionable features, especially under tight latency constraints, requires careful design and a deep understanding of performance bottlenecks, but with the right approach, it's an eminently solvable challenge.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>

@@ -1,5 +1,20 @@
 [
   {
+    "slug": "high-throughput-feature-engineering-realtime-ml",
+    "title": "Architecting High-Throughput Feature Engineering Pipelines for Real-time ML",
+    "metaDescription": "Learn to architect high-throughput feature engineering pipelines for real-time machine learning applications using Python, focusing on performance and scalability.",
+    "tags": [
+      "Python",
+      "Machine Learning",
+      "Data Engineering",
+      "Performance",
+      "Feature Engineering"
+    ],
+    "date": "2026-09-22",
+    "readingTime": "7 min read",
+    "image": "assets/blog/high-throughput-feature-engineering-realtime-ml-cover.png"
+  },
+  {
     "slug": "scaling-async-batch-jobs-high-performance-python-redis-queues",
     "title": "Scaling Asynchronous Batch Jobs: Crafting High-Performance Task Queues with Python and Redis",
     "metaDescription": "Learn to architect high-throughput asynchronous batch processing in Python using FastAPI, Redis, and custom async worker patterns for scalable background job execution.",
