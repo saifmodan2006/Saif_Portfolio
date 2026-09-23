@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Optimizing Python IPC: High-Throughput Data Processing with Shared Memory and NumPy | Saif Modan</title>
+  <meta name="description" content="Master high-throughput Python data processing by eliminating IPC overhead using shared memory and NumPy for low-latency parallel pipelines.">
+  <meta name="keywords" content="Python, Performance, Multiprocessing, NumPy, Data Engineering, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/optimizing-python-ipc-shared-memory-numpy.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Optimizing Python IPC: High-Throughput Data Processing with Shared Memory and NumPy | Saif Modan">
+  <meta property="og:description" content="Master high-throughput Python data processing by eliminating IPC overhead using shared memory and NumPy for low-latency parallel pipelines.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/optimizing-python-ipc-shared-memory-numpy.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/optimizing-python-ipc-shared-memory-numpy-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Optimizing Python IPC: High-Throughput Data Processing with Shared Memory and NumPy">
+  <meta property="article:published_time" content="2026-09-23">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Optimizing Python IPC: High-Throughput Data Processing with Shared Memory and NumPy | Saif Modan">
+  <meta name="twitter:description" content="Master high-throughput Python data processing by eliminating IPC overhead using shared memory and NumPy for low-latency parallel pipelines.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/optimizing-python-ipc-shared-memory-numpy-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Optimizing Python IPC: High-Throughput Data Processing with Shared Memory and NumPy",
+  "description": "Master high-throughput Python data processing by eliminating IPC overhead using shared memory and NumPy for low-latency parallel pipelines.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/optimizing-python-ipc-shared-memory-numpy-cover.png"
+  ],
+  "datePublished": "2026-09-23",
+  "dateModified": "2026-09-23",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/optimizing-python-ipc-shared-memory-numpy.html"
+  },
+  "keywords": "Python, Performance, Multiprocessing, NumPy, Data Engineering"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">Performance</span><span class="blog-tag-pill">Multiprocessing</span><span class="blog-tag-pill">NumPy</span><span class="blog-tag-pill">Data Engineering</span>
+          </div>
+          <h1 class="blog-article-title">Optimizing Python IPC: High-Throughput Data Processing with Shared Memory and NumPy</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-23</span>
+              <span>•</span>
+              <span>4 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/optimizing-python-ipc-shared-memory-numpy-cover.png" alt="Optimizing Python IPC: High-Throughput Data Processing with Shared Memory and NumPy" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <h2>The Bottleneck of Pythonic Parallelism</h2>
+<p>In the world of high-performance Python engineering, the Global Interpreter Lock (GIL) is a well-known adversary. When building data-intensive applications—such as real-time signal processing or high-frequency financial modeling—we often turn to the <code>multiprocessing</code> module to bypass the GIL. However, traditional inter-process communication (IPC) mechanisms like <code>multiprocessing.Queue</code> or <code>Pipe</code> introduce a hidden tax: <strong>serialization overhead</strong>.</p>
+<p>Every time data is sent between processes using standard queues, Python must 'pickle' the object, transmit the bytes, and 'unpickle' it on the receiving end. For multi-gigabyte datasets or high-frequency small packets, this CPU-intensive overhead becomes the primary bottleneck, often negating the performance gains of parallelism. To achieve true high-throughput performance, we must move away from copying data and toward <strong>Shared Memory</strong>.</p>
+<h2>Enter <code>multiprocessing.shared_memory</code></h2>
+<p>Introduced in Python 3.8, the <code>shared_memory</code> module allows different processes to map the same region of physical memory into their own virtual address spaces. When combined with NumPy, this allows multiple processes to read and write to the same large-scale arrays simultaneously without any serialization or copying.</p>
+<h3>The Architecture of a Shared Memory Pipeline</h3>
+<p>To implement this effectively, we need a robust lifecycle management strategy. Shared memory blocks are persistent; if your process crashes without cleaning up, the memory remains allocated, leading to leaks that can exhaust system resources. </p>
+<p>Our architecture follows three main pillars:<br />
+1. <strong>Allocation:</strong> Creating a named memory block in the coordinator process.<br />
+2. <strong>Mapping:</strong> Attaching NumPy arrays to the buffer of that block.<br />
+3. <strong>Synchronization:</strong> Using low-level primitives like <code>multiprocessing.Event</code> or <code>Lock</code> to prevent race conditions.</p>
+<h2>Practical Implementation: Zero-Copy Array Processing</h2>
+<p>Below is a technical demonstration of a producer-consumer pattern where a producer populates a large matrix and a consumer performs computations on it, both accessing the same memory space.</p>
+<pre><code class="language-python">import numpy as np
+from multiprocessing import Process, shared_memory, Event
+import time
+
+def producer(shm_name, shape, dtype, ready_event, finish_event):
+    # Attach to the existing shared memory
+    existing_shm = shared_memory.SharedMemory(name=shm_name)
+
+    # Create a NumPy array backed by the shared memory
+    shared_array = np.ndarray(shape, dtype=dtype, buffer=existing_shm.buf)
+
+    print(f&quot;[Producer] Generating data into {shm_name}...&quot;)
+    # Simulate data generation
+    shared_array[:] = np.random.random(shape)
+
+    # Signal that data is ready
+    ready_event.set()
+
+    # Wait for consumer to finish before closing
+    finish_event.wait()
+    existing_shm.close()
+    print(&quot;[Producer] Cleaned up.&quot;)
+
+def consumer(shm_name, shape, dtype, ready_event, finish_event):
+    # Wait for the producer to populate data
+    ready_event.wait()
+
+    existing_shm = shared_memory.SharedMemory(name=shm_name)
+    shared_array = np.ndarray(shape, dtype=dtype, buffer=existing_shm.buf)
+
+    print(f&quot;[Consumer] Processing data from {shm_name}...&quot;)
+    # Perform zero-copy computation
+    result = np.mean(shared_array)
+    print(f&quot;[Consumer] Mean value: {result}&quot;)
+
+    # Signal completion
+    finish_event.set()
+    existing_shm.close()
+
+if __name__ == &quot;__main__&quot;:
+    data_shape = (10000, 10000)  # 100M floats (~800MB)
+    data_dtype = np.float64
+
+    # 1. Allocate block
+    size = int(np.prod(data_shape) * np.dtype(data_dtype).itemsize)
+    shm = shared_memory.SharedMemory(create=True, size=size)
+
+    ready = Event()
+    finished = Event()
+
+    p1 = Process(target=producer, args=(shm.name, data_shape, data_dtype, ready, finished))
+    p2 = Process(target=consumer, args=(shm.name, data_shape, data_dtype, ready, finished))
+
+    p1.start()
+    p2.start()
+
+    p1.join()
+    p2.join()
+
+    # 2. Final cleanup
+    shm.unlink()  # Free the memory back to the OS
+    print(&quot;Main process: Shared memory unlinked.&quot;)
+</code></pre>
+<h2>Critical Engineering Considerations</h2>
+<h3>1. Memory Safety and Synchronization</h3>
+<p>While shared memory eliminates the copy cost, it introduces the risk of data corruption. If two processes write to the same index simultaneously, the result is undefined. In high-throughput scenarios, avoid <code>multiprocessing.Lock</code> if possible, as it introduces significant latency. Instead, use a <strong>Single-Writer-Multiple-Reader (SWMR)</strong> pattern or partition the array into chunks where each process owns a specific slice of the index space.</p>
+<h3>2. The SharedMemoryManager</h3>
+<p>For complex applications with many transient arrays, use <code>multiprocessing.managers.SharedMemoryManager</code>. It provides a context manager that handles the <code>unlink()</code> calls automatically, even if the program encounters an unhandled exception. This is vital for production-grade resilience.</p>
+<h3>3. NUMA Awareness</h3>
+<p>On multi-socket server hardware (like dual EPYC or Xeon setups), the physical location of the memory matters. Accessing shared memory across sockets (Non-Uniform Memory Access) can introduce latency spikes. For ultra-low latency, you may need to use <code>taskset</code> or <code>numactl</code> to pin your processes to the same physical CPU socket where the memory was allocated.</p>
+<h2>Performance Trade-offs</h2>
+<p>Shared memory is not a silver bullet. For small data structures (under 1MB), the overhead of managing named memory blocks and synchronization events may exceed the time saved from skipping serialization. However, as the data size grows into the hundreds of megabytes or gigabytes, the performance curve of shared memory remains flat, while the curve for <code>Queues</code> grows exponentially due to pickling time.</p>
+<h2>Conclusion</h2>
+<p>Architecting high-performance Python systems requires a deep understanding of how the language interacts with OS-level primitives. By leveraging <code>shared_memory</code> and NumPy, we can build pipelines that process massive datasets with the efficiency of C++, while maintaining the developer productivity of Python. As we push toward more complex AI and data engineering tasks, mastering zero-copy IPC becomes an essential skill in any senior engineer's toolkit.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
