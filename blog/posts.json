@@ -1,5 +1,20 @@
 [
   {
+    "slug": "optimizing-multi-modal-rag-pipelines-llamaindex-milvus",
+    "title": "Optimizing Multi-Modal RAG Pipelines: Orchestrating Vector Embeddings with LlamaIndex and Milvus",
+    "metaDescription": "Master the architecture of multi-modal RAG systems. Learn to integrate LlamaIndex and Milvus for high-performance, scalable visual and textual retrieval.",
+    "tags": [
+      "Python",
+      "RAG",
+      "Vector Databases",
+      "AI Engineering",
+      "LlamaIndex"
+    ],
+    "date": "2026-09-24",
+    "readingTime": "3 min read",
+    "image": "assets/blog/optimizing-multi-modal-rag-pipelines-llamaindex-milvus-cover.png"
+  },
+  {
     "slug": "optimizing-python-ipc-shared-memory-numpy",
     "title": "Optimizing Python IPC: High-Throughput Data Processing with Shared Memory and NumPy",
     "metaDescription": "Master high-throughput Python data processing by eliminating IPC overhead using shared memory and NumPy for low-latency parallel pipelines.",
