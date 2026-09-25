@@ -1,5 +1,20 @@
 [
   {
+    "slug": "robust-distributed-locks-idempotency-async-python",
+    "title": "Implementing Robust Distributed Locks and Idempotency in High-Throughput Async Python Services",
+    "metaDescription": "Master distributed locking and idempotency patterns in async Python services for data consistency and preventing race conditions in high-throughput environments.",
+    "tags": [
+      "Python",
+      "Asyncio",
+      "Distributed Systems",
+      "Concurrency",
+      "Data Integrity"
+    ],
+    "date": "2026-09-25",
+    "readingTime": "10 min read",
+    "image": "assets/blog/robust-distributed-locks-idempotency-async-python-cover.png"
+  },
+  {
     "slug": "optimizing-multi-modal-rag-pipelines-llamaindex-milvus",
     "title": "Optimizing Multi-Modal RAG Pipelines: Orchestrating Vector Embeddings with LlamaIndex and Milvus",
     "metaDescription": "Master the architecture of multi-modal RAG systems. Learn to integrate LlamaIndex and Milvus for high-performance, scalable visual and textual retrieval.",

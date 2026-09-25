@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Implementing Robust Distributed Locks and Idempotency in High-Throughput Async Python Services | Saif Modan</title>
+  <meta name="description" content="Master distributed locking and idempotency patterns in async Python services for data consistency and preventing race conditions in high-throughput environments.">
+  <meta name="keywords" content="Python, Asyncio, Distributed Systems, Concurrency, Data Integrity, Saif Modan, AI Developer, Python Engineer">
+  <meta name="author" content="Saif Modan">
+  <meta name="application-name" content="Saif Modan">
+  <meta name="apple-mobile-web-app-title" content="Saif Modan">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://saif-portfolio-seven-sigma.vercel.app/blog/robust-distributed-locks-idempotency-async-python.html">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <meta name="theme-color" content="#09090b">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Implementing Robust Distributed Locks and Idempotency in High-Throughput Async Python Services | Saif Modan">
+  <meta property="og:description" content="Master distributed locking and idempotency patterns in async Python services for data consistency and preventing race conditions in high-throughput environments.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://saif-portfolio-seven-sigma.vercel.app/blog/robust-distributed-locks-idempotency-async-python.html">
+  <meta property="og:site_name" content="Saif Modan">
+  <meta property="og:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/robust-distributed-locks-idempotency-async-python-cover.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Implementing Robust Distributed Locks and Idempotency in High-Throughput Async Python Services">
+  <meta property="article:published_time" content="2026-09-25">
+  <meta property="article:author" content="Saif Modan">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@modan_saif55342">
+  <meta name="twitter:creator" content="@modan_saif55342">
+  <meta name="twitter:title" content="Implementing Robust Distributed Locks and Idempotency in High-Throughput Async Python Services | Saif Modan">
+  <meta name="twitter:description" content="Master distributed locking and idempotency patterns in async Python services for data consistency and preventing race conditions in high-throughput environments.">
+  <meta name="twitter:image" content="https://saif-portfolio-seven-sigma.vercel.app/assets/blog/robust-distributed-locks-idempotency-async-python-cover.png">
+
+  <!-- Schema.org BlogPosting Structured Data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Implementing Robust Distributed Locks and Idempotency in High-Throughput Async Python Services",
+  "description": "Master distributed locking and idempotency patterns in async Python services for data consistency and preventing race conditions in high-throughput environments.",
+  "image": [
+    "https://saif-portfolio-seven-sigma.vercel.app/assets/blog/robust-distributed-locks-idempotency-async-python-cover.png"
+  ],
+  "datePublished": "2026-09-25",
+  "dateModified": "2026-09-25",
+  "author": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app",
+    "jobTitle": "AI Developer & Python Engineer"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "Saif Modan",
+    "url": "https://saif-portfolio-seven-sigma.vercel.app"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://saif-portfolio-seven-sigma.vercel.app/blog/robust-distributed-locks-idempotency-async-python.html"
+  },
+  "keywords": "Python, Asyncio, Distributed Systems, Concurrency, Data Integrity"
+}
+  </script>
+
+  <!-- Vercel Web Analytics & Speed Insights -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/icon-48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/icon-96.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-post-page-body">
+
+  <!-- Scroll Progress Bar -->
+  <div class="scroll-progress-bar" id="scroll-progress"></div>
+
+  <!-- Global Header Navigation -->
+  <header class="site-header" id="site-header">
+    <div class="container-xl">
+      <nav class="header-nav">
+
+        <!-- Brand Logo / Name -->
+        <a href="../index.html" class="brand-logo" aria-label="Saif Modan Home">
+          <span style="font-size: 0.88rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">SAIF MODAN</span>
+        </a>
+
+        <!-- Right Header Actions -->
+        <div class="header-actions">
+          <!-- Live Time & Date Header Clock Widget -->
+          <div class="header-clock-widget" id="header-clock" title="Current Local Time (IST)">
+            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span id="clock-time">--:--:-- --</span>
+            <span class="clock-divider">|</span>
+            <span id="clock-date">--- --, ----</span>
+          </div>
+
+          <!-- Ask AI Modal Trigger Button -->
+          <button id="open-ai-modal" class="btn-ask-ai" aria-label="Ask AI Assistant">
+            <span class="btn-ask-ai-text">ASK AI</span>
+            <svg class="btn-ask-ai-sparkle" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-3.01L12 0z" />
+            </svg>
+          </button>
+
+          <!-- Hamburger Menu Button -->
+          <button id="open-menu-drawer" class="btn-menu" aria-label="Open navigation menu">
+            <span class="menu-label">MENU</span>
+            <div class="hamburger-icon">
+              <div class="bar bar-1"></div>
+              <div class="bar bar-2"></div>
+            </div>
+          </button>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Article Container -->
+  <main class="blog-post-main">
+    <div class="container-xl">
+      <article class="blog-article-wrapper">
+
+        <!-- Back Link Navigation -->
+        <div class="blog-back-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>All Articles</span>
+          </a>
+        </div>
+
+        <!-- Article Header -->
+        <header class="blog-article-header">
+          <div class="blog-article-tags">
+            <span class="blog-tag-pill">Python</span><span class="blog-tag-pill">Asyncio</span><span class="blog-tag-pill">Distributed Systems</span><span class="blog-tag-pill">Concurrency</span><span class="blog-tag-pill">Data Integrity</span>
+          </div>
+          <h1 class="blog-article-title">Implementing Robust Distributed Locks and Idempotency in High-Throughput Async Python Services</h1>
+
+          <div class="blog-article-meta-bar">
+            <div class="blog-author-mini">
+              <div class="author-info-text">
+                <span class="author-name-title">Saif Modan</span>
+                <span class="author-role-sub">AI Developer & Python Engineer</span>
+              </div>
+            </div>
+            <div class="blog-article-stats">
+              <span>2026-09-25</span>
+              <span>•</span>
+              <span>10 min read</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Featured Cover Image -->
+        <div class="blog-article-cover-wrap">
+          <img src="../assets/blog/robust-distributed-locks-idempotency-async-python-cover.png" alt="Implementing Robust Distributed Locks and Idempotency in High-Throughput Async Python Services" class="blog-article-cover-img" loading="eager">
+        </div>
+
+        <!-- Article Body Content -->
+        <div class="blog-article-content">
+          <p>In the world of high-throughput asynchronous Python services, especially those built with frameworks like FastAPI, ensuring data consistency and preventing race conditions across multiple instances is paramount. As our services scale horizontally, the inherent challenges of distributed computing—like concurrent access to shared resources or the risk of duplicate operations due to network retries—become increasingly prominent. Without robust mechanisms, these issues can lead to data corruption, inconsistent states, and ultimately, a breakdown of trust in your system.</p>
+<p>This article dives deep into two critical patterns for building resilient distributed systems: <strong>Distributed Locks</strong> and <strong>Idempotency</strong>. We'll explore why they are essential, how to implement them effectively in an <code>asyncio</code> and <code>FastAPI</code> context using Redis, and discuss the architectural considerations and trade-offs involved.</p>
+<h2>The Challenge of Concurrency in Distributed Async Systems</h2>
+<p>Traditional Python applications running on a single process can rely on standard synchronization primitives like <code>threading.Lock</code> or <code>asyncio.Lock</code> to protect critical sections. However, in a distributed microservices architecture, where multiple instances of your service might be running concurrently (e.g., behind a load balancer), these local locks are entirely insufficient. Each instance operates in its own memory space, oblivious to the state of others.</p>
+<p>Consider a scenario where multiple instances of an e-commerce service try to decrement the stock of a popular item simultaneously. Without proper coordination, two instances might read the same stock level, both decrement it, and then both write back their new (incorrect) values, leading to an over-selling situation. Similarly, a payment processing service might receive the same request twice due to a client-side retry, resulting in a double charge if not handled idempotently.</p>
+<p>This is where distributed coordination mechanisms become indispensable. We need a way for all service instances to agree on who has exclusive access to a resource or to ensure that an operation, even if executed multiple times, yields the same result.</p>
+<h2>Demystifying Distributed Locks</h2>
+<p>A distributed lock is a mechanism that provides mutual exclusion across multiple processes or machines in a distributed system. Its primary goal is to ensure that at any given time, only one process can execute a specific critical section of code, thereby protecting shared resources from race conditions.</p>
+<p>Key properties of a robust distributed lock:<br />
+*   <strong>Mutual Exclusion</strong>: Only one client can hold the lock at a time.<br />
+*   <strong>Deadlock-Free</strong>: Even if a client crashes or network partitions occur, the lock can eventually be acquired.<br />
+*   <strong>Fault-Tolerance</strong>: The locking system itself remains available even if some nodes fail.</p>
+<p>While various solutions exist (like Apache Zookeeper, etcd, or even database-level locks), Redis, with its <code>SET NX PX</code> command, offers a surprisingly simple and performant way to implement a basic distributed lock suitable for many asynchronous Python applications. <code>SET key value NX PX expiration_ms</code> attempts to set a key <em>only if it doesn't already exist</em> (<code>NX</code>), with a specified <em>expiration time</em> (<code>PX</code>), making it ideal for a lock.</p>
+<h3>Implementing a Distributed Lock with Async Python and Redis</h3>
+<p>Let's build a simple <code>DistributedLock</code> context manager using <code>aioredis</code> (or <code>redis-py</code> with <code>asyncio</code> support) to demonstrate this:</p>
+<pre><code class="language-python">import asyncio
+import uuid
+from typing import Optional
+
+import aioredis
+
+class DistributedLock:
+    def __init__(
+        self, 
+        redis_client: aioredis.Redis, 
+        lock_name: str, 
+        timeout: int = 10, 
+        blocking: bool = True, 
+        blocking_timeout: Optional[int] = None
+    ):
+        self.redis_client = redis_client
+        self.lock_name = f&quot;lock:{lock_name}&quot;
+        self.timeout = timeout  # Lock expiration in seconds
+        self.blocking = blocking
+        self.blocking_timeout = blocking_timeout
+        self.lock_value = str(uuid.uuid4()) # Unique value to identify our lock instance
+        self._acquired = False
+
+    async def __aenter__(self):
+        start_time = asyncio.get_event_loop().time()
+        while True:
+            # Try to acquire the lock using SET NX PX
+            # NX: Only set if the key does not already exist
+            # PX: Set expiration in milliseconds
+            acquired = await self.redis_client.set(
+                self.lock_name, self.lock_value, nx=True, px=int(self.timeout * 1000)
+            )
+            if acquired:
+                self._acquired = True
+                return self
+
+            if not self.blocking:
+                break
+
+            # Check for blocking timeout
+            if self.blocking_timeout is not None and \
+               asyncio.get_event_loop().time() - start_time &gt; self.blocking_timeout:
+                break
+
+            await asyncio.sleep(0.05) # Wait a bit before retrying
+
+        if not self._acquired:
+            raise RuntimeError(f&quot;Could not acquire lock {self.lock_name}&quot;)
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        if self._acquired:
+            # Use Lua script for atomic deletion: only delete if value matches
+            # This prevents deleting a lock set by another process if ours expired
+            lua_script = &quot;&quot;&quot;
+                if redis.call('get', KEYS[1]) == ARGV[1] then
+                    return redis.call('del', KEYS[1])
+                else
+                    return 0
+                end
+            &quot;&quot;&quot;
+            await self.redis_client.eval(lua_script, keys=[self.lock_name], args=[self.lock_value])
+
+# Example Usage with FastAPI (assuming a Redis connection pool)
+# from fastapi import FastAPI, Depends, HTTPException, status
+# from aioredis import Redis
+
+# async def get_redis_client():
+#     # In a real app, manage a connection pool
+#     redis = await aioredis.from_url(&quot;redis://localhost&quot;)
+#     try:
+#         yield redis
+#     finally:
+#         await redis.close()
+
+# @app.post(&quot;/decrement-stock/{item_id}&quot;)
+# async def decrement_stock(item_id: str, redis: Redis = Depends(get_redis_client)):
+#     try:
+#         async with DistributedLock(redis, f&quot;stock_lock:{item_id}&quot;, timeout=5):
+#             # Simulate reading current stock and decrementing
+#             current_stock = int(await redis.get(f&quot;stock:{item_id}&quot;) or 100) # Example initial stock
+#             if current_stock &lt;= 0:
+#                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=&quot;Item out of stock&quot;)
+#             
+#             new_stock = current_stock - 1
+#             await redis.set(f&quot;stock:{item_id}&quot;, new_stock)
+#             return {&quot;message&quot;: f&quot;Stock for {item_id} decremented to {new_stock}&quot;}
+#     except RuntimeError as e:
+#         raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=str(e))
+#     except Exception as e:
+#         # Handle other potential errors
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=&quot;An error occurred&quot;)
+</code></pre>
+<p>This <code>DistributedLock</code> class uses a unique <code>lock_value</code> to ensure that only the process that acquired the lock can release it, preventing accidental release by an expired lock or another process. The <code>PX</code> (expire time) is crucial for deadlock prevention if a client crashes after acquiring the lock but before releasing it.</p>
+<h2>Ensuring Idempotency: The Key to Reliable Distributed Operations</h2>
+<p>While distributed locks prevent concurrent modification of shared resources, they don't solve the problem of duplicate requests. In distributed systems, network issues, client retries, or message queue redeliveries can cause the same operation to be initiated multiple times. An <em>idempotent</em> operation is one that, when executed multiple times with the same parameters, produces the same result as if it had been executed only once.</p>
+<p>Idempotency is critical for operations like:<br />
+*   Processing payments (avoiding double charges).<br />
+*   Creating unique resources (avoiding duplicate entries).<br />
+*   Applying state changes (ensuring consistency).</p>
+<h3>Building an Idempotent API Endpoint with FastAPI</h3>
+<p>The most common pattern for achieving idempotency in HTTP APIs involves using an <code>Idempotency-Key</code> header, typically a UUID, provided by the client. The server then uses this key to track the request's processing state.</p>
+<p>Here’s a conceptual approach for an idempotent FastAPI endpoint:</p>
+<ol>
+<li><strong>Client provides <code>Idempotency-Key</code></strong>: A unique identifier for the request.</li>
+<li><strong>Server checks key state</strong>: Before processing, check a persistent store (like Redis or a database) if this <code>Idempotency-Key</code> has been seen before.</li>
+<li><strong>Handle states</strong>: <ul>
+<li><strong>New Key</strong>: Store the key with a <code>PROCESSING</code> state and proceed with the operation.</li>
+<li><strong>Processing Key</strong>: If the key is already <code>PROCESSING</code>, return a <code>409 Conflict</code> or <code>202 Accepted</code> (indicating the operation is already underway).</li>
+<li><strong>Completed Key</strong>: If the key is <code>COMPLETED</code>, return the original result of the first successful operation (if stored) or a <code>200 OK</code> indicating the operation was already performed.</li>
+</ul>
+</li>
+<li><strong>Update state</strong>: Once the operation is successfully completed, update the key's state to <code>COMPLETED</code> and store the result if needed.</li>
+</ol>
+<pre><code class="language-python"># import aioredis
+# from fastapi import FastAPI, Header, HTTPException, status, Depends
+
+# app = FastAPI()
+# redis_client = aioredis.from_url(&quot;redis://localhost&quot;) # Use a proper connection pool in production
+
+# async def get_redis():
+#     yield redis_client
+
+# @app.post(&quot;/process-payment&quot;, status_code=status.HTTP_200_OK)
+# async def process_payment(
+#     amount: float,
+#     idempotency_key: str = Header(..., alias=&quot;Idempotency-Key&quot;),
+#     redis: aioredis.Redis = Depends(get_redis)
+# ):
+#     # Define states
+#     PROCESSING = &quot;processing&quot;
+#     COMPLETED = &quot;completed&quot;
+#     FAILED = &quot;failed&quot;
+
+#     # Check idempotency key status
+#     status_key = f&quot;idempotency:{idempotency_key}:status&quot;
+#     result_key = f&quot;idempotency:{idempotency_key}:result&quot;
+
+#     current_status = await redis.get(status_key)
+
+#     if current_status == COMPLETED:
+#         # Return cached result if operation already completed successfully
+#         cached_result = await redis.get(result_key)
+#         return {&quot;message&quot;: &quot;Operation already completed&quot;, &quot;result&quot;: cached_result.decode() if cached_result else None}
+#     elif current_status == PROCESSING:
+#         raise HTTPException(
+#             status_code=status.HTTP_409_CONFLICT,
+#             detail=&quot;Operation for this idempotency key is already in progress.&quot;
+#         )
+
+#     # If new key, or failed previous attempt (can add logic to retry FAILED)
+#     await redis.set(status_key, PROCESSING, ex=3600) # Expire in 1 hour if stuck
+
+#     try:
+#         # --- CRITICAL BUSINESS LOGIC --- 
+#         # This is where your actual payment processing, resource creation, etc. happens.
+#         # Potentially use a distributed lock here if the logic involves shared mutable state.
+#         await asyncio.sleep(2) # Simulate a long-running payment process
+#         payment_id = f&quot;payment_{uuid.uuid4()}&quot;
+#         # --- END CRITICAL BUSINESS LOGIC ---
+
+#         await redis.set(status_key, COMPLETED, ex=3600 * 24) # Keep completed state longer
+#         await redis.set(result_key, payment_id, ex=3600 * 24)
+#         return {&quot;message&quot;: &quot;Payment processed successfully&quot;, &quot;payment_id&quot;: payment_id}
+#     except Exception as e:
+#         await redis.set(status_key, FAILED, ex=300) # Short expiry for failed state
+#         raise HTTPException(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             detail=f&quot;Payment processing failed: {e}&quot;
+#         )
+</code></pre>
+<p>Combining distributed locks with idempotency ensures a robust system. The idempotency key handles duplicate <em>requests</em>, while a distributed lock can protect critical <em>sections of code</em> within the processing logic that might be susceptible to race conditions across multiple instances.</p>
+<h2>Architectural Considerations and Best Practices</h2>
+<p>Implementing these patterns requires careful thought to avoid new bottlenecks or complexities:</p>
+<ul>
+<li><strong>Granularity of Locks</strong>: Lock only the absolute critical section. Locking too broadly reduces concurrency and performance. Identify the smallest possible code block that requires mutual exclusion.</li>
+<li><strong>Lock Timeout</strong>: Always set an expiration (<code>PX</code> in Redis). This is crucial to prevent deadlocks if a client crashes or becomes unresponsive while holding a lock. The timeout should be longer than the expected maximum execution time of the critical section.</li>
+<li><strong>Client Identification</strong>: As shown, use a unique value (e.g., UUID) when acquiring a lock. This ensures that only the client that acquired the lock can release it, even if the lock key expires and is re-acquired by another client.</li>
+<li><strong>Lua Scripts for Atomicity</strong>: For operations like releasing a lock (check-then-delete) or updating idempotency states, use Redis Lua scripts. This guarantees atomicity, preventing race conditions between <code>GET</code> and <code>DEL</code> commands.</li>
+<li><strong>Idempotency Key Storage</strong>: Choose a fast, reliable, and scalable store for idempotency keys. Redis is excellent for its speed and TTL capabilities. For long-term persistence or complex query needs, a database might be more appropriate.</li>
+<li><strong>Performance Impact</strong>: Distributed locks introduce latency due to network round-trips to the Redis server and potential contention. Profile your application to understand the performance implications. If contention is high, consider alternative designs (e.g., optimistic locking, sharding, or event sourcing) that reduce the need for explicit pessimistic locks.</li>
+<li><strong>Monitoring</strong>: Instrument your locks. Track lock acquisition times, contention rates, and timeouts. This visibility is vital for debugging performance issues and identifying bottlenecks.</li>
+<li><strong>Redlock (and its nuances)</strong>: For extremely high-stakes scenarios where a single Redis instance is not fault-tolerant enough, the Redlock algorithm proposes using multiple independent Redis instances to achieve a more robust distributed lock. However, Redlock is complex and has been a subject of debate regarding its safety guarantees under certain network partitions. For most applications, a single Redis instance with proper <code>SET NX PX</code> and client identification is sufficient.</li>
+</ul>
+<h2>Conclusion</h2>
+<p>Building high-throughput, resilient asynchronous Python services demands a deep understanding of distributed system challenges. By strategically employing <strong>distributed locks</strong> and ensuring <strong>idempotency</strong>, you can safeguard your application against race conditions and duplicate operations, leading to more reliable and trustworthy systems. While these patterns introduce complexity, the benefits in terms of data integrity and system stability are invaluable. As an AI Developer and Data Analytics specialist, I've seen firsthand how these foundational concepts underpin robust data processing pipelines and reliable AI inference services. Master them, and you'll be well-equipped to architect the next generation of scalable Python applications.</p>
+        </div>
+
+        <!-- Author Bio Card at Bottom -->
+        <div class="blog-post-author-box">
+          <div class="author-box-details">
+            <span class="author-box-kicker">WRITTEN BY</span>
+            <h3 class="author-box-name">Saif Modan</h3>
+            <p class="author-box-bio">
+              AI Developer and Python Engineer specializing in Generative AI, Video Diffusion, FastAPI microservices, and Data Analytics. Based in Ahmedabad, India.
+            </p>
+            <div class="author-box-links">
+              <a href="../contact.html">Get in Touch →</a>
+              <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="blog-bottom-nav">
+          <a href="../blog.html" class="blog-back-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Back to All Articles</span>
+          </a>
+          <a href="../contact.html" class="blog-back-link">
+            <span>Discuss This Topic with Saif →</span>
+          </a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" id="contact">
+    <div class="container-xl">
+      <div class="footer-cta-block">
+        <h2 class="footer-cta-title">
+          Let’s build something extraordinary together.
+        </h2>
+        <div class="footer-email-row">
+          <a href="mailto:saifmodan000@gmail.com" class="btn-large-email">
+            <span>saifmodan000@gmail.com</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <a href="tel:+919824785082" class="btn-large-phone" title="Call Saif Modan">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+91 98247 85082</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom-bar">
+        <div>
+          <span>Saif Modan © 2026</span>
+          <span style="margin: 0 0.5rem;">•</span>
+          <span>Ahmedabad, India (IST)</span>
+        </div>
+        <div class="footer-social-links">
+          <a href="https://github.com/saifmodan2006" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/saif-modan" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://x.com/modan_saif55342" target="_blank" rel="noopener noreferrer">X (Twitter)</a>
+          <a href="mailto:saifmodan000@gmail.com">Email</a>
+          <a href="tel:+919824785082" style="color: var(--text-main); font-weight: 700;">+91 98247 85082</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Menu Drawer -->
+  <div id="menu-drawer" class="menu-drawer-overlay" role="dialog" aria-modal="true">
+    <div class="menu-drawer-card">
+      <div>
+        <div class="drawer-header">
+          <span style="font-weight: 800; font-size: 1.1rem;">NAVIGATION</span>
+          <button id="close-menu-drawer" class="btn-close-modal" aria-label="Close menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <ul class="drawer-nav-list">
+          <li><a href="../index.html#hero" class="drawer-nav-link menu-link"><span>01</span><span>Home</span></a></li>
+          <li><a href="../blog.html" class="drawer-nav-link menu-link" style="color: var(--text-main); font-weight: 800;"><span>02</span><span>Blog</span></a></li>
+          <li><a href="../index.html#work" class="drawer-nav-link menu-link"><span>03</span><span>Selected Work</span></a></li>
+          <li><a href="../assets/Saif_Modan_Resume.pdf" target="_blank" rel="noopener noreferrer" class="drawer-nav-link" style="color: var(--text-main); font-weight: 800;"><span>04</span><span>My Resume ↗</span></a></li>
+          <li><a href="../index.html#experience" class="drawer-nav-link menu-link"><span>05</span><span>Experience</span></a></li>
+          <li><a href="../index.html#toolbox" class="drawer-nav-link menu-link"><span>06</span><span>Tech Stack</span></a></li>
+          <li><a href="../index.html#credentials" class="drawer-nav-link menu-link"><span>07</span><span>Education</span></a></li>
+          <li><a href="../contact.html" class="drawer-nav-link menu-link"><span>08</span><span>Contact</span></a></li>
+        </ul>
+      </div>
+
+      <div class="drawer-footer-actions">
+        <a href="tel:+919824785082" class="drawer-btn" style="text-decoration: none;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>Call: +91 98247 85082</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive "Ask Saif AI" Assistant Modal -->
+  <div id="ai-modal" class="ai-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div class="ai-modal-title" id="ai-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.78-1.22L2 22l1.22-5.22A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2z" />
+          </svg>
+          <span>Ask Saif AI</span>
+        </div>
+        <button id="close-ai-modal" class="btn-close-modal" aria-label="Close AI Assistant">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-chat-body" id="ai-chat-body">
+        <div class="chat-bubble assistant">
+          Hello! I’m Saif's AI portfolio assistant. Ask me anything about this blog post, Saif’s projects, technical skills in Python/AI, work experience, or availability!
+        </div>
+      </div>
+
+      <form class="ai-input-form" id="ai-input-form">
+        <input type="text" id="ai-input-field" class="ai-input-field" placeholder="Ask a question about Saif..." autocomplete="off" required>
+        <button type="submit" class="ai-send-btn" aria-label="Send message">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/app.js"></script>
+</body>
+
+</html>
